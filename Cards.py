@@ -93,6 +93,7 @@ class Table():
         self.deck = Deck(table=self)
         self.playedcards = self.deck.playedcards
         self.players = self.createPlayers(Playercount)
+        self.indexcurrplayer = 0
 
     def createPlayers(self, count: int):
         """Returns a list of Hand objects
