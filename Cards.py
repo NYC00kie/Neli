@@ -110,6 +110,11 @@ class Table():
             player.drawcard(amount=7)
         self.playedcards.append(self.deck.drawcard())
 
+    def gameloop(commonmemdict):
+        while commonmemdict["rungame"] == True:
+            pass
+        pass
+
 
 if __name__ == '__main__':
     d = Table()
