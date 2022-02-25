@@ -106,6 +106,12 @@ class Table():
             hands.append(Hand(self, player=False))
         return hands
 
+    def startgame(self):
+        """initialize the players cards and the top card to start the game"""
+        for player in self.players:
+            player.drawcard(amount=7)
+        self.playedcards.append(self.deck.drawcard())
+
     def needdraw(self, player):
         """Check if the current Player can playe a card
         Returns False if he can play a card"""
@@ -118,12 +124,6 @@ class Table():
 
             if (card.value == self.playedcards[-1].value or card.color == self.playedcards[-1].color) and self.playedcards[-1].color != "BLACK":
                 return False
-
-    def startgame(self):
-        """initialize the players cards and the top card to start the game"""
-        for player in self.players:
-            player.drawcard(amount=7)
-        self.playedcards.append(self.deck.drawcard())
 
     def pcmove(self):
         pass
