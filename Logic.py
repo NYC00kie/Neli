@@ -109,9 +109,15 @@ class Table():
     def needdraw(self, player):
         """Check if the current Player can playe a card
         Returns False if he can play a card"""
-        # check if the player can place a card.
-        # if he can return False
-        pass
+
+        for card in player.holding:
+
+            # needed to check if the Person can Play a Card
+            # checks if the color or value of the card is the same as the current card laying on the table
+            # and if the color of the card laying on the table is not BLACK
+
+            if (card.value == self.playedcards[-1].value or card.color == self.playedcards[-1].color) and self.playedcards[-1].color != "BLACK":
+                return False
 
     def startgame(self):
         """initialize the players cards and the top card to start the game"""
