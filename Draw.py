@@ -1,5 +1,8 @@
 import pygame
 import sys
+from Logic import Table
+from threading import Thread
+import time
 
 
 class Draw():
@@ -23,9 +26,17 @@ class Draw():
         pass
 
     def drawgame(self):
-        pass
+        table = Table(2, 0)
+        table.startgame()
+        commonmemdict = {"rungame": True}
+        print(id(commonmemdict))
+        gamethread = Thread(target=table.gameloop, args=(commonmemdict,))
+        gamethread.start()
+        time.sleep(0.01)
+        commonmemdict["rungame"] = False
+        gamethread.join()
 
 
 if __name__ == "__main__":
     d = Draw()
-    d.drawmenu()
+    d.drawgame()

@@ -101,9 +101,9 @@ class Table():
         Creates Hands for the supplied amount of players and nonplayers"""
         hands = []
         for _ in range(playercount):
-            hands.append(Hand(self, player=True))
+            hands.append(Hand(self, isplayer=True))
         for _ in range(npccount):
-            hands.append(Hand(self, player=False))
+            hands.append(Hand(self, isplayer=False))
         return hands
 
     def startgame(self):
@@ -150,19 +150,13 @@ class Table():
             # After drawing skip to the next
 
             # checks whether the current Player is the last Player in the round. And then rotates to the next Player.
-            if curr_player_index % len(self.players) != 0:
+            if (curr_player_index+1) % len(self.players) != 0 or curr_player_index == 0:
                 curr_player_index += 1
             else:
                 curr_player_index = 0
 
 
 if __name__ == '__main__':
-    d = Table()
-    print(len(d.deck.undrawncards))
+    d = Table(2, 0)
     d.startgame()
-    print(len(d.deck.undrawncards))
-    print(dir(d))
-    print(d.players)
-    for player in d.players:
-        print([str(x) for x in player.holding])
-        print(len(player.holding))
+    d.gameloop({"rungame": True})
