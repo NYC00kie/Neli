@@ -14,6 +14,11 @@ class Draw():
         self.menudimension = (700, 600)
         self.clock = pygame.time.Clock()
 
+    def update_fps(self, clock, font):
+    	fps = str(int(clock.get_fps()))
+    	fps_text = font.render(fps, 1, pygame.Color("coral"))
+    	return fps_text
+
     def drawmenu(self):
         self.screen = self.pygame.display.set_mode(self.menudimension)
 
@@ -55,8 +60,13 @@ class Draw():
 
         gamethread.start()
 
+        # set values that need to be initialised
         self.screen = self.pygame.display.set_mode(self.menudimension)
         width, height = self.screen.get_width(), self.screen.get_height()
+        currindex = -50
+        rects = []
+        clock = pygame.time.Clock()
+        clockfont = pygame.font.SysFont("Arial", 18)
 
         while True:
             self.clock.tick(30)
@@ -71,13 +81,45 @@ class Draw():
                     gamethread.join()
                     sys.exit()
 
-            hand = table.players[commonmemdict["curr_player_index"]].holding
+            # The Player Index Changed
+            if currindex != commonmemdict["curr_player_index"]:
+                currindex = commonmemdict["curr_player_index"]
 
+                # Recompute Rects for Player Cards
+                rects = []
+                hand = table.players[commonmemdict["curr_player_index"]].holding
+
+                for index in range(len(hand)):
+                    rect_posh = int(width/len(hand))*index
+                    rect_post = int(height - (height/3))
+                    rect_width = int(width/len(hand))
+                    rect_height = int(height/3)
+                    rect = pygame.Rect(
+                        (rect_posh, rect_post),
+                        (rect_width, rect_height)
+                    )
+                    rects.append(rect)
+
+            # draw the cards in the Players Hand and draw rectangles around them
+            hand = table.players[currindex].holding
             cords = [[int((width/len(hand))*x), int(height - height/10)]
                      for x in range(len(hand))]
-
             for index, cord in enumerate(cords):
                 self.screen.blit(cards_and_text[str(hand[index])], cord)
+                pygame.draw.rect(self.screen, "GREEN", rects[index], 2)
+
+            # draw cards in the middle of the board
+            self.screen.blit(
+                cards_and_text[str(table.playedcards[-1])],
+                (
+                    int((width/2)
+                        - cards_and_text[str(table.playedcards[-1])].get_width()/2),
+                    int(height/2-height/10)
+                )
+            )
+
+            # fps counter
+            self.screen.blit(self.update_fps(clock, clockfont), (10, 0))
 
             self.pygame.display.update()
 
