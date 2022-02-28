@@ -15,9 +15,21 @@ class Draw():
         self.clock = pygame.time.Clock()
 
     def update_fps(self, clock, font):
-    	fps = str(int(clock.get_fps()))
-    	fps_text = font.render(fps, 1, pygame.Color("coral"))
-    	return fps_text
+        fps = str(int(clock.get_fps()))
+        fps_text = font.render(fps, 1, pygame.Color("coral"))
+        return fps_text
+
+    def movecard_onhover(self, pos, rects):
+        """Checks if the mouse hovers over a card rectangle
+        Returns the index of this card"""
+
+        for index in range(len(rects)):
+            if rects[index].collidepoint(pos):
+
+                rects[index] = rects[index].move(
+                    0, - int(self.screen.get_height()/6))
+
+        return rects
 
     def drawmenu(self):
         self.screen = self.pygame.display.set_mode(self.menudimension)
@@ -47,7 +59,7 @@ class Draw():
         font = pygame.font.SysFont("dejavusans", 12)
         cards_and_text = {}
         for card in [str(x) for x in table.deck.undrawncards]:
-            cards_and_text[card] = font.render(card, True, "BLUE")
+            cards_and_text[card] = font.render(card, True, "#f100ff")
         commonmemdict = {"rungame": True}
 
         print(id(commonmemdict))
@@ -61,15 +73,14 @@ class Draw():
         gamethread.start()
 
         # set values that need to be initialised
-        self.screen = self.pygame.display.set_mode(self.menudimension)
+        self.screen = self.pygame.display.set_mode(
+            self.menudimension)
         width, height = self.screen.get_width(), self.screen.get_height()
-        currindex = -50
         rects = []
-        clock = pygame.time.Clock()
         clockfont = pygame.font.SysFont("Arial", 18)
 
         while True:
-            self.clock.tick(30)
+
             self.screen.fill((60, 25, 60))
             events = pygame.event.get()
             pressed_keys = pygame.key.get_pressed()
@@ -81,32 +92,33 @@ class Draw():
                     gamethread.join()
                     sys.exit()
 
+            mousepos = pygame.mouse.get_pos()
+
             # The Player Index Changed
-            if currindex != commonmemdict["curr_player_index"]:
-                currindex = commonmemdict["curr_player_index"]
 
-                # Recompute Rects for Player Cards
-                rects = []
-                hand = table.players[commonmemdict["curr_player_index"]].holding
+            # Recompute Rects for Player Cards
+            rects = []
+            hand = table.players[commonmemdict["curr_player_index"]].holding
 
-                for index in range(len(hand)):
-                    rect_posh = int(width/len(hand))*index
-                    rect_post = int(height - (height/3))
-                    rect_width = int(width/len(hand))
-                    rect_height = int(height/3)
-                    rect = pygame.Rect(
-                        (rect_posh, rect_post),
-                        (rect_width, rect_height)
-                    )
-                    rects.append(rect)
+            for index in range(len(hand)):
+                rect_posh = int(width/len(hand))*index
+                rect_post = int(height - (height/3))
+                rect_width = int(width/len(hand))
+                rect_height = int(height/3)
+                rect = pygame.Rect(
+                    (rect_posh, rect_post),
+                    (rect_width, rect_height)
+                )
+                rects.append(rect)
+
+            rects = self.movecard_onhover(mousepos, rects)
 
             # draw the cards in the Players Hand and draw rectangles around them
-            hand = table.players[currindex].holding
-            cords = [[int((width/len(hand))*x), int(height - height/10)]
-                     for x in range(len(hand))]
-            for index, cord in enumerate(cords):
-                self.screen.blit(cards_and_text[str(hand[index])], cord)
-                pygame.draw.rect(self.screen, "GREEN", rects[index], 2)
+            hand = table.players[commonmemdict["curr_player_index"]].holding
+
+            for index, rect in enumerate(rects):
+                self.screen.blit(cards_and_text[str(hand[index])], rect)
+                pygame.draw.rect(self.screen, "GREEN", rect, 2)
 
             # draw cards in the middle of the board
             self.screen.blit(
@@ -119,9 +131,11 @@ class Draw():
             )
 
             # fps counter
-            self.screen.blit(self.update_fps(clock, clockfont), (10, 0))
+            self.screen.blit(self.update_fps(self.clock, clockfont), (10, 0))
 
             self.pygame.display.update()
+
+            self.clock.tick(30)
 
 
 if __name__ == "__main__":
