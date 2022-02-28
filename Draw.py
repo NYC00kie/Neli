@@ -78,12 +78,13 @@ class Draw():
         width, height = self.screen.get_width(), self.screen.get_height()
         rects = []
         clockfont = pygame.font.SysFont("Arial", 18)
-
+        count = 0
         while True:
 
             self.screen.fill((60, 25, 60))
             events = pygame.event.get()
             pressed_keys = pygame.key.get_pressed()
+            mousepos = pygame.mouse.get_pos()
 
             for event in events:
                 if event.type == pygame.QUIT or pressed_keys[pygame.K_ESCAPE]:
@@ -91,15 +92,24 @@ class Draw():
                     commonmemdict["rungame"] = False
                     gamethread.join()
                     sys.exit()
-
-            mousepos = pygame.mouse.get_pos()
+                # check for button press
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_presses = pygame.mouse.get_pressed()
+                    if mouse_presses[0]:
+                        # check if the click was on a card
+                        # if it was then tell the game thread which card and set the event object
+                        for index, rect in enumerate(rects):
+                            if rect.collidepoint(mousepos):
+                                commonmemdict["index_playedcard"] = index
+                                eventobj.set()
 
             # The Player Index Changed
 
             # Recompute Rects for Player Cards
-            rects = []
+
             hand = table.players[commonmemdict["curr_player_index"]].holding
 
+            rects = []
             for index in range(len(hand)):
                 rect_posh = int(width/len(hand))*index
                 rect_post = int(height - (height/3))

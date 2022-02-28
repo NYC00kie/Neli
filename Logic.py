@@ -125,43 +125,50 @@ class Table():
 
             if (card.value == self.playedcards[-1].value or card.color == self.playedcards[-1].color) and self.playedcards[-1].color != "BLACK":
                 return False
+        return True
 
     def pcmove(self, event, commonmemdict):
-        while True:
-            if not event.is_set():
-                event.wait(1)
-                continue
-            else:
-                playedcard = commonmemdict["playedcard"]
+        """Test if the Player can't do anything besides drawing
+        If the player can only draw, then they autodraw
+        ---
+        If the player can play card,
+        then the Thread waits for the player to pick a card which is indicated by the eventobj flag beeing set to true
+        the index of the played card is then shared via the common dictionary that the main and doughter thread share"""
+        if self.needdraw(self.players[self.indexcurrplayer]):
+            self.players[self.indexcurrplayer].drawcard(1)
+            return 0
+
+        while not event.is_set():
+            event.wait(1)
+
+        event.clear()
+        playedcard = self.players[self.indexcurrplayer].holding[commonmemdict["index_playedcard"]]
+        self.players[self.indexcurrplayer].playcard(playedcard)
+        self.indexcurrplayer += 1
 
     def npcmove(self):
         pass
 
     def gameloop(self, commonmemdict, event):
-        curr_player_index = 0
-        commonmemdict["curr_player_index"] = curr_player_index
+        self.indexcurrplayer = 0
+        commonmemdict["curr_player_index"] = self.indexcurrplayer
         # Gameloop and drawloop will be seperate.
         # They will only share a common dictionary, which is how they will communicate and share data
 
-        while commonmemdict["rungame"] or not event.is_set():
+        while commonmemdict["rungame"] and not event.is_set():
 
-            commonmemdict["curr_player_index"] = curr_player_index
+            commonmemdict["curr_player_index"] = self.indexcurrplayer
             time.sleep(0.5)
-        #     player = self.players[curr_player_index]
-        #
-        #     if player.isplayer:
-        #         self.pcmove(event=event, commonmemdict=commonmemdict)
-        #     else:
-        #         self.npcmove(event)
-        #
-        #     # Check before if he can even Play a Card and then write that to the common memory
-        #     # After drawing skip to the next
-        #
-        #     # checks whether the current Player is the last Player in the round. And then rotates to the next Player.
-        #     if (curr_player_index+1) % len(self.players) != 0 or curr_player_index == 0:
-        #         curr_player_index += 1
-        #     else:
-        #         curr_player_index = 0
+            player = self.players[self.indexcurrplayer]
+
+            print(player)
+
+            if player.isplayer:
+                self.pcmove(event=event, commonmemdict=commonmemdict)
+            else:
+                self.npcmove(event)
+
+            self.indexcurrplayer = self.indexcurrplayer % len(self.players)
 
 
 if __name__ == '__main__':
