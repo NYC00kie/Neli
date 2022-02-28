@@ -161,8 +161,6 @@ class Table():
             time.sleep(0.5)
             player = self.players[self.indexcurrplayer]
 
-            print(player)
-
             if player.isplayer:
                 self.pcmove(event=event, commonmemdict=commonmemdict)
             else:
