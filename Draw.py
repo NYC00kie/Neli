@@ -72,12 +72,13 @@ class Draw():
 
         gamethread.start()
 
-        # set values that need to be initialised
+        # set values that need to be initialised before the loop
         self.screen = self.pygame.display.set_mode(
             self.menudimension)
         width, height = self.screen.get_width(), self.screen.get_height()
         rects = []
         clockfont = pygame.font.SysFont("Arial", 18)
+
         count = 0
         while True:
 
@@ -102,8 +103,6 @@ class Draw():
                             if rect.collidepoint(mousepos):
                                 commonmemdict["index_playedcard"] = index
                                 eventobj.set()
-
-            # The Player Index Changed
 
             # Recompute Rects for Player Cards
 
@@ -142,6 +141,12 @@ class Draw():
 
             # fps counter
             self.screen.blit(self.update_fps(self.clock, clockfont), (10, 0))
+
+            # Render the Players number in the top right corner
+            playernum_txt = clockfont.render(
+                str(commonmemdict["curr_player_index"]), True, "#FFFFFF")
+            self.screen.blit(
+                playernum_txt, (width-playernum_txt.get_width(), 0))
 
             self.pygame.display.update()
 
