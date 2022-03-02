@@ -123,7 +123,7 @@ class Table():
             # checks if the color or value of the card is the same as the current card laying on the table
             # and if the color of the card laying on the table is not BLACK
 
-            if (card.value == self.playedcards[-1].value or card.color == self.playedcards[-1].color) and self.playedcards[-1].color != "BLACK":
+            if (card.value == self.playedcards[-1].value or card.color == self.playedcards[-1].color) or self.playedcards[-1].color == "BLACK":
                 return False
         return True
 
@@ -134,10 +134,15 @@ class Table():
         If the player can play card,
         then the Thread waits for the player to pick a card which is indicated by the eventobj flag beeing set to true
         the index of the played card is then shared via the common dictionary that the main and doughter thread share"""
+        print(
+            len(self.players[self.indexcurrplayer].holding), self.indexcurrplayer)
         if self.needdraw(self.players[self.indexcurrplayer]):
             self.players[self.indexcurrplayer].drawcard(1)
+            self.indexcurrplayer += 1
             return 0
 
+        # loop and wait until the main thread sets the event flag to true.
+        # then leave the loop, clear the event flag and play the card, which the player chose
         while not event.is_set():
             event.wait(1)
 
