@@ -127,6 +127,11 @@ class Table():
                 return False
         return True
 
+    def checkvalidityplacedcard(self, playcard):
+        """Returns False if it wasn't valid
+        Returns True if it was valid"""
+        return True
+
     def cardfunctionality(self, playedcard):
         """Method checks if the Card Played was a Special Card and what effect it has"""
         # Check for "SKIP", "REVERSE", "DRAW2", "WILDCARD", "WILDCARD4"
@@ -162,6 +167,12 @@ class Table():
 
         event.clear()
         playedcard = self.players[self.indexcurrplayer].holding[commonmemdict["index_playedcard"]]
+        
+        # check if the selected card is playable:
+        # if its not then return the function without doing anything.
+        # the loop will execute this function again and wait for a valid card
+        if not self.checkvalidityplacedcard(playedcard):
+            return
         self.cardfunctionality(playedcard)
         self.players[self.indexcurrplayer].playcard(playedcard)
         self.indexcurrplayer += 1
