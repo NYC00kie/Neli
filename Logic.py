@@ -127,11 +127,16 @@ class Table():
                 return False
         return True
 
+    def cardfunctionality(self, playedcard):
+        carddict = {'RED 0': "", 'RED 1': "", 'RED 2': "", 'RED 3': "", 'RED 4': "", 'RED 5': "", 'RED 6': "", 'RED 7': "", 'RED 8': "", 'RED 9': "", 'RED SKIP': "", 'RED REVERSE': "", 'RED DRAW2': "", 'GREEN 0': "", 'GREEN 1': "", 'GREEN 2': "", 'GREEN 3': "", 'GREEN 4': "", 'GREEN 5': "", 'GREEN 6': "", 'GREEN 7': "", 'GREEN 8': "", 'GREEN 9': "", 'GREEN SKIP': "", 'GREEN REVERSE': "", 'GREEN DRAW2': "", 'BLUE 0': "", 'BLUE 1': "",
+                    'BLUE 2': "", 'BLUE 3': "", 'BLUE 4': "", 'BLUE 5': "", 'BLUE 6': "", 'BLUE 7': "", 'BLUE 8': "", 'BLUE 9': "", 'BLUE SKIP': "", 'BLUE REVERSE': "", 'BLUE DRAW2': "", 'YELLOW 0': "", 'YELLOW 1': "", 'YELLOW 2': "", 'YELLOW 3': "", 'YELLOW 4': "", 'YELLOW 5': "", 'YELLOW 6': "", 'YELLOW 7': "", 'YELLOW 8': "", 'YELLOW 9': "", 'YELLOW SKIP': "", 'YELLOW REVERSE': "", 'YELLOW DRAW2': "", 'BLACK WILDCARD': "", 'BLACK WILDCARD4': ""}
+        pass
+
     def pcmove(self, event, commonmemdict):
         """Test if the Player can't do anything besides drawing
         If the player can only draw, then they autodraw
         ---
-        If the player can play card,
+        If the player can play a card,
         then the Thread waits for the player to pick a card which is indicated by the eventobj flag beeing set to true
         the index of the played card is then shared via the common dictionary that the main and doughter thread share"""
         print(
@@ -148,6 +153,7 @@ class Table():
 
         event.clear()
         playedcard = self.players[self.indexcurrplayer].holding[commonmemdict["index_playedcard"]]
+        self.cardfunctionality(playedcard)
         self.players[self.indexcurrplayer].playcard(playedcard)
         self.indexcurrplayer += 1
 
