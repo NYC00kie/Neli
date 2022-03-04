@@ -167,7 +167,7 @@ class Table():
 
         event.clear()
         playedcard = self.players[self.indexcurrplayer].holding[commonmemdict["index_playedcard"]]
-        
+
         # check if the selected card is playable:
         # if its not then return the function without doing anything.
         # the loop will execute this function again and wait for a valid card
