@@ -14,7 +14,7 @@ class Draw():
         self.pygame = pygame
         self.menudimension = (700, 600)
         self.clock = pygame.time.Clock()
-        self.bg = f"./Backgrounds/bg-1.jpg"
+        self.bg = f"./Backgrounds/bg-{random.randint(1,5)}.jpg"
 
     def update_fps(self, clock, font):
         fps = str(int(clock.get_fps()))
