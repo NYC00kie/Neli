@@ -128,8 +128,7 @@ class Table():
         return True
 
     def cardfunctionality(self, playedcard):
-        carddict = {'RED 0': "", 'RED 1': "", 'RED 2': "", 'RED 3': "", 'RED 4': "", 'RED 5': "", 'RED 6': "", 'RED 7': "", 'RED 8': "", 'RED 9': "", 'RED SKIP': "", 'RED REVERSE': "", 'RED DRAW2': "", 'GREEN 0': "", 'GREEN 1': "", 'GREEN 2': "", 'GREEN 3': "", 'GREEN 4': "", 'GREEN 5': "", 'GREEN 6': "", 'GREEN 7': "", 'GREEN 8': "", 'GREEN 9': "", 'GREEN SKIP': "", 'GREEN REVERSE': "", 'GREEN DRAW2': "", 'BLUE 0': "", 'BLUE 1': "",
-                    'BLUE 2': "", 'BLUE 3': "", 'BLUE 4': "", 'BLUE 5': "", 'BLUE 6': "", 'BLUE 7': "", 'BLUE 8': "", 'BLUE 9': "", 'BLUE SKIP': "", 'BLUE REVERSE': "", 'BLUE DRAW2': "", 'YELLOW 0': "", 'YELLOW 1': "", 'YELLOW 2': "", 'YELLOW 3': "", 'YELLOW 4': "", 'YELLOW 5': "", 'YELLOW 6': "", 'YELLOW 7': "", 'YELLOW 8': "", 'YELLOW 9': "", 'YELLOW SKIP': "", 'YELLOW REVERSE': "", 'YELLOW DRAW2': "", 'BLACK WILDCARD': "", 'BLACK WILDCARD4': ""}
+
         pass
 
     def pcmove(self, event, commonmemdict):
