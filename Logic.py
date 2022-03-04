@@ -128,8 +128,17 @@ class Table():
         return True
 
     def cardfunctionality(self, playedcard):
-
-        pass
+        # "SKIP", "REVERSE", "DRAW2", "WILDCARD", "WILDCARD4"
+        if playedcard.value == "SKIP":
+            pass
+        elif playedcard.value == "REVERSE":
+            pass
+        elif playedcard.value == "DRAW2":
+            pass
+        elif playedcard.value == "WILDCARD":
+            pass
+        elif playedcard.value == "WILDCARD4":
+            pass
 
     def pcmove(self, event, commonmemdict):
         """Test if the Player can't do anything besides drawing
