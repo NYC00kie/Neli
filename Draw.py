@@ -1,5 +1,6 @@
 import pygame
 import sys
+import random
 from Logic import Table
 from threading import Thread
 import threading
@@ -13,6 +14,7 @@ class Draw():
         self.pygame = pygame
         self.menudimension = (700, 600)
         self.clock = pygame.time.Clock()
+        self.bg = f"./Backgrounds/bg-1.jpg"
 
     def update_fps(self, clock, font):
         fps = str(int(clock.get_fps()))
@@ -54,6 +56,21 @@ class Draw():
         # Move the hovered over Card a bit up
         #
 
+        # set screen
+        self.screen = self.pygame.display.set_mode(
+            self.menudimension)
+
+        # set values that need to be initialised before the loop
+        count = 0
+        width, height = self.screen.get_width(), self.screen.get_height()
+        rects = []
+        clockfont = pygame.font.SysFont("Arial", 18)
+
+        background = self.bg
+        bgimg = pygame.transform.smoothscale(pygame.image.load(
+            background).convert_alpha(), (width, height))
+
+        # creating the Table object and creating a dictionarie with each card and a text for it
         table = Table(playercount=2, npccount=0)
 
         font = pygame.font.SysFont("dejavusans", 12)
@@ -72,23 +89,17 @@ class Draw():
 
         gamethread.start()
 
-        # set values that need to be initialised before the loop
-        self.screen = self.pygame.display.set_mode(
-            self.menudimension)
-        width, height = self.screen.get_width(), self.screen.get_height()
-        rects = []
-        clockfont = pygame.font.SysFont("Arial", 18)
-
-        count = 0
         while True:
 
-            self.screen.fill((60, 25, 60))
+            self.screen.blit(bgimg, (0, 0))
             events = pygame.event.get()
             pressed_keys = pygame.key.get_pressed()
             mousepos = pygame.mouse.get_pos()
 
             for event in events:
                 if event.type == pygame.QUIT or pressed_keys[pygame.K_ESCAPE]:
+                    # need to correctly close the game
+                    commonmemdict["index_playedcard"] = 0
                     eventobj.set()
                     commonmemdict["rungame"] = False
                     gamethread.join()
