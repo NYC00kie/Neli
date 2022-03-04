@@ -172,6 +172,7 @@ class Table():
     def gameloop(self, commonmemdict, event):
         self.indexcurrplayer = 0
         commonmemdict["curr_player_index"] = self.indexcurrplayer
+
         # Gameloop and drawloop will be seperate.
         # They will only share a common dictionary, which is how they will communicate and share data
 
