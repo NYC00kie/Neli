@@ -136,15 +136,15 @@ class Table():
         """Method checks if the Card Played was a Special Card and what effect it has"""
         # Check for "SKIP", "REVERSE", "DRAW2", "WILDCARD", "WILDCARD4"
         if playedcard.value == "SKIP":
-            pass
+            return
         elif playedcard.value == "REVERSE":
-            pass
+            return
         elif playedcard.value == "DRAW2":
-            pass
+            return
         elif playedcard.value == "WILDCARD":
-            pass
+            return
         elif playedcard.value == "WILDCARD4":
-            pass
+            return
 
     def pcmove(self, event, commonmemdict):
         """Test if the Player can't do anything besides drawing
