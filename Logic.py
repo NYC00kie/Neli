@@ -128,7 +128,8 @@ class Table():
         return True
 
     def cardfunctionality(self, playedcard):
-        # "SKIP", "REVERSE", "DRAW2", "WILDCARD", "WILDCARD4"
+        """Method checks if the Card Played was a Special Card and what effect it has"""
+        # Check for "SKIP", "REVERSE", "DRAW2", "WILDCARD", "WILDCARD4"
         if playedcard.value == "SKIP":
             pass
         elif playedcard.value == "REVERSE":
