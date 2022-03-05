@@ -36,7 +36,7 @@ class Deck():
         cards = []
         colors = ["RED", "GREEN", "BLUE", "YELLOW"]
         values = ["0", "1", "2", "3", "4", "5", "6",
-                  "7", "8", "9", "SKIP", "REVERSE", "DRAW2"]*2
+                  "7", "8", "9", "SKIP", "DRAW2"]*2
         for colr in colors:
             for val in values:
                 cards.append(Card(val=val, color=colr))

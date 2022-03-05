@@ -15,6 +15,7 @@ class Draw():
         self.menudimension = (700, 600)
         self.clock = pygame.time.Clock()
         self.bg = f"./Backgrounds/bg-{random.randint(1,5)}.jpg"
+        self.deckindex = 0
 
     def update_fps(self, clock, font):
         fps = str(int(clock.get_fps()))
@@ -75,8 +76,12 @@ class Draw():
 
         font = pygame.font.SysFont("dejavusans", 12)
         cards_and_text = {}
-        for card in [str(x) for x in table.deck.undrawncards]:
-            cards_and_text[card] = font.render(card, True, "#f100ff")
+        cards_and_pic = {}
+        for card in [x for x in table.deck.undrawncards]:
+            paf = f"./Deck{self.deckindex}/{card.color}-{card.value}-min.bmp"
+            img = pygame.image.load(paf).convert_alpha()
+            cards_and_pic[str(card)] = img
+            cards_and_text[str(card)] = font.render(str(card), True, "#f100ff")
         commonmemdict = {"rungame": True}
 
         print(id(commonmemdict))
@@ -119,6 +124,8 @@ class Draw():
 
             hand = table.players[commonmemdict["curr_player_index"]].holding
 
+            print(len(hand))
+
             rects = []
             for index in range(len(hand)):
                 rect_posh = int(width/len(hand))*index
@@ -134,10 +141,16 @@ class Draw():
             rects = self.movecard_onhover(mousepos, rects)
 
             # draw the cards in the Players Hand and draw rectangles around them
-            hand = table.players[commonmemdict["curr_player_index"]].holding
 
             for index, rect in enumerate(rects):
-                self.screen.blit(cards_and_text[str(hand[index])], rect)
+
+                key = str(hand[index])
+                if cards_and_pic[key]:
+                    transformed = pygame.transform.smoothscale(
+                        cards_and_pic[str(hand[index])], (rect.w, rect.h))
+                    self.screen.blit(transformed, rect)
+                else:
+                    self.screen.blit(cards_and_text[str(hand[index])], rect)
                 pygame.draw.rect(self.screen, "GREEN", rect, 2)
 
             # draw cards in the middle of the board
