@@ -124,6 +124,7 @@ class Draw():
 
             hand = table.players[commonmemdict["curr_player_index"]].holding
 
+            # print is needed else it crashes because the length of the hand ist not equal to the length of rects
             print(len(hand))
 
             rects = []
