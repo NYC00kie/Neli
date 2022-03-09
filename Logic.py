@@ -114,7 +114,7 @@ class Table():
         self.playedcards.append(self.deck.drawcard())
 
     def needdraw(self, player):
-        """Check if the current Player can playe a card
+        """Check if the current Player can play a card
         Returns False if he can play a card"""
 
         for card in player.holding:
@@ -132,7 +132,7 @@ class Table():
         Returns True if it was valid"""
         return True
 
-    def cardfunctionality(self, playedcard):
+    def cardfunctionality(self, playedcard, commonmemdict):
         """Method checks if the Card Played was a Special Card and what effect it has"""
         # Check for "SKIP", "REVERSE", "DRAW2", "WILDCARD", "WILDCARD4"
         if playedcard.value == "SKIP":
