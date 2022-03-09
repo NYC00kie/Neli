@@ -1,6 +1,7 @@
-from Draw import Draw
 import sys
 sys.path.append(".")
+from Draw import Draw
+
 
 
 def main():
