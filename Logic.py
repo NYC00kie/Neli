@@ -182,7 +182,7 @@ class Table():
         # the loop will execute this function again and wait for a valid card
         if not self.checkvalidityplacedcard(playedcard):
             return
-        self.cardfunctionality(playedcard)
+        self.cardfunctionality(playedcard, commonmemdict)
         self.players[self.indexcurrplayer].playcard(playedcard)
         self.indexcurrplayer += 1
 
