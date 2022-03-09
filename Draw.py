@@ -124,8 +124,8 @@ class Draw():
 
             hand = table.players[commonmemdict["curr_player_index"]].holding
 
-            # print is needed else it crashes because the length of the hand ist not equal to the length of rects
-            print(len(hand))
+            # clock tick needed here else it crashes because the length of the hand ist not equal to the length of rects
+            self.clock.tick(30)
 
             rects = []
             for index in range(len(hand)):
@@ -174,8 +174,6 @@ class Draw():
                 playernum_txt, (width-playernum_txt.get_width(), 0))
 
             self.pygame.display.update()
-
-            self.clock.tick(30)
 
 
 if __name__ == "__main__":
