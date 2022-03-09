@@ -132,6 +132,10 @@ class Table():
         Returns True if it was valid"""
         return True
 
+    def blackcardfunctionality(self):
+        """returns the color of the next Card"""
+        pass
+
     def cardfunctionality(self, playedcard, commonmemdict):
         """Method checks if the Card Played was a Special Card and what effect it has"""
         # Check for "SKIP", "REVERSE", "DRAW2", "WILDCARD", "WILDCARD4"
@@ -144,6 +148,11 @@ class Table():
         elif playedcard.value == "WILDCARD":
             return
         elif playedcard.value == "WILDCARD4":
+            # copy pure wildcard implementation
+
+            # Draw 4 Cards
+            nextplayerindex = self.indexcurrplayer % len(self.players)
+            self.players[nextplayerindex].draw(amount=4)
             return
 
     def pcmove(self, event, commonmemdict):
