@@ -36,14 +36,14 @@ class Deck():
         cards = []
         colors = ["RED", "GREEN", "BLUE", "YELLOW"]
         values = ["0", "1", "2", "3", "4", "5", "6",
-                  "7", "8", "9", "SKIP", "DRAW2"]*2
+                  "7", "8", "9", "SKIP", "DRAW2"] * 2
         for colr in colors:
             for val in values:
                 cards.append(Card(val=val, color=colr))
 
         # generate cards which are Black
         for colr in ["BLACK"]:
-            for val in ["WILDCARD", "WILDCARD4"]*4:
+            for val in ["WILDCARD", "WILDCARD4"] * 4:
                 cards.append(Card(val=val, color=colr))
 
         if self.shuffled:
@@ -97,7 +97,7 @@ class Table():
         self.players = self.createPlayers(playercount, npccount)
         self.indexcurrplayer = 0
 
-    def createPlayers(self, playercount: int, npccount: int):
+    def createPlayers(self, playercount: int, npccount: int) -> list:
         """Returns a list of Hand objects
         Creates Hands for the supplied amount of players and nonplayers"""
         hands = []
@@ -113,7 +113,7 @@ class Table():
             player.drawcard(amount=7)
         self.playedcards.append(self.deck.drawcard())
 
-    def needdraw(self, player):
+    def needdraw(self, player) -> bool:
         """Check if the current Player can play a card
         Returns False if he can play a card"""
 
@@ -127,7 +127,7 @@ class Table():
                 return False
         return True
 
-    def checkvalidityplacedcard(self, playcard):
+    def checkvalidityplacedcard(self, playcard) -> bool:
         """Returns False if it wasn't valid
         Returns True if it was valid"""
         return True
@@ -136,7 +136,7 @@ class Table():
         """returns the color of the next Card"""
         pass
 
-    def cardfunctionality(self, playedcard, commonmemdict):
+    def cardfunctionality(self, playedcard, commonmemdict) -> None:
         """Method checks if the Card Played was a Special Card and what effect it has"""
         # Check for "SKIP", "REVERSE", "DRAW2", "WILDCARD", "WILDCARD4"
         if playedcard.value == "SKIP":
@@ -167,7 +167,7 @@ class Table():
         if self.needdraw(self.players[self.indexcurrplayer]):
             self.players[self.indexcurrplayer].drawcard(1)
             self.indexcurrplayer += 1
-            return 0
+            return
 
         # loop and wait until the main thread sets the event flag to true.
         # then leave the loop, clear the event flag and play the card, which the player chose

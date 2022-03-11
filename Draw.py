@@ -30,7 +30,7 @@ class Draw():
             if rects[index].collidepoint(pos):
 
                 rects[index] = rects[index].move(
-                    0, - int(self.screen.get_height()/6))
+                    0, - int(self.screen.get_height() / 6))
 
         return rects
 
@@ -74,6 +74,21 @@ class Draw():
         # creating the Table object and creating a dictionarie with each card and a text for it
         table = Table(playercount=2, npccount=0)
 
+        # the curr_player_index gets overwritten directly in the gamethread but this might be needed for some systems
+        commonmemdict = {"rungame": True, "curr_player_index": 0}
+
+        print(id(commonmemdict))
+
+        # init the game and start the gameloop thread
+
+        eventobj = threading.Event()
+        gamethread = Thread(target=table.gameloop,
+                            args=(commonmemdict, eventobj))
+
+        gamethread.start()
+
+        # generate the fonts, pictures etc. for displaying cards
+
         font = pygame.font.SysFont("dejavusans", 12)
         cards_and_text = {}
         cards_and_pic = {}
@@ -82,17 +97,8 @@ class Draw():
             img = pygame.image.load(paf).convert_alpha()
             cards_and_pic[str(card)] = img
             cards_and_text[str(card)] = font.render(str(card), True, "#f100ff")
-        commonmemdict = {"rungame": True}
 
-        print(id(commonmemdict))
-
-        # init the game and start the gameloop thread
         table.startgame()
-        eventobj = threading.Event()
-        gamethread = Thread(target=table.gameloop,
-                            args=(commonmemdict, eventobj))
-
-        gamethread.start()
 
         while True:
 
@@ -129,10 +135,10 @@ class Draw():
 
             rects = []
             for index in range(len(hand)):
-                rect_posh = int(width/len(hand))*index
-                rect_post = int(height - (height/3))
-                rect_width = int(width/len(hand))
-                rect_height = int(height/3)
+                rect_posh = int(width / len(hand)) * index
+                rect_post = int(height - (height / 3))
+                rect_width = int(width / len(hand))
+                rect_height = int(height / 3)
                 rect = pygame.Rect(
                     (rect_posh, rect_post),
                     (rect_width, rect_height)
@@ -158,9 +164,9 @@ class Draw():
             self.screen.blit(
                 cards_and_text[str(table.playedcards[-1])],
                 (
-                    int((width/2)
-                        - cards_and_text[str(table.playedcards[-1])].get_width()/2),
-                    int(height/2-height/10)
+                    int((width / 2)
+                        - cards_and_text[str(table.playedcards[-1])].get_width() / 2),
+                    int(height / 2 - height / 10)
                 )
             )
 
@@ -171,7 +177,7 @@ class Draw():
             playernum_txt = clockfont.render(
                 str(commonmemdict["curr_player_index"]), True, "#FFFFFF")
             self.screen.blit(
-                playernum_txt, (width-playernum_txt.get_width(), 0))
+                playernum_txt, (width - playernum_txt.get_width(), 0))
 
             self.pygame.display.update()
 
