@@ -151,11 +151,13 @@ class Table():
             # copy pure wildcard implementation
 
             # Draw 4 Cards
-            nextplayerindex = self.indexcurrplayer % len(self.players)
-            self.players[nextplayerindex].draw(amount=4)
+            print(self.indexcurrplayer, self.indexcurrplayer
+                  + 1, (self.indexcurrplayer+1) % len(self.players))
+            nextplayerindex = (self.indexcurrplayer+1) % len(self.players)
+            self.players[nextplayerindex].drawcard(amount=4)
             return
 
-    def pcmove(self, event, commonmemdict):
+    def pcmove(self, event, commonmemdict) -> None:
         """Test if the Player can't do anything besides drawing
         If the player can only draw, then they autodraw
         ---
@@ -186,8 +188,23 @@ class Table():
         self.players[self.indexcurrplayer].playcard(playedcard)
         self.indexcurrplayer += 1
 
-    def npcmove(self):
-        pass
+    def npcmove(self, event, commonmemdict):
+        print(
+            len(self.players[self.indexcurrplayer].holding), self.indexcurrplayer)
+        if self.needdraw(self.players[self.indexcurrplayer]):
+            self.players[self.indexcurrplayer].drawcard(1)
+            self.indexcurrplayer += 1
+            return
+
+        validcards = []
+        for card in self.players[self.indexcurrplayer].holding:
+            if self.checkvalidityplacedcard(card):
+                validcards.append(card)
+
+        chosencard = random.choice(validcards)
+        self.cardfunctionality(chosencard, commonmemdict)
+        self.players[self.indexcurrplayer].playcard(chosencard)
+        self.indexcurrplayer += 1
 
     def gameloop(self, commonmemdict, event):
         self.indexcurrplayer = 0
@@ -205,7 +222,7 @@ class Table():
             if player.isplayer:
                 self.pcmove(event=event, commonmemdict=commonmemdict)
             else:
-                self.npcmove(event)
+                self.npcmove(event=event, commonmemdict=commonmemdict)
 
             self.indexcurrplayer = self.indexcurrplayer % len(self.players)
 
