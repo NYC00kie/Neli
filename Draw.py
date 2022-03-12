@@ -72,7 +72,7 @@ class Draw():
             background).convert_alpha(), (width, height))
 
         # creating the Table object and creating a dictionarie with each card and a text for it
-        table = Table(playercount=2, npccount=0)
+        table = Table(playercount=1, npccount=1)
 
         # the curr_player_index gets overwritten directly in the gamethread but this might be needed for some systems
         commonmemdict = {"rungame": True, "curr_player_index": 0}
@@ -131,7 +131,7 @@ class Draw():
             hand = table.players[commonmemdict["curr_player_index"]].holding
 
             # clock tick needed here else it crashes because the length of the hand ist not equal to the length of rects
-            self.clock.tick(30)
+            self.clock.tick(15)
 
             rects = []
             for index in range(len(hand)):
@@ -161,13 +161,16 @@ class Draw():
                 pygame.draw.rect(self.screen, "GREEN", rect, 2)
 
             # draw cards in the middle of the board
-            self.screen.blit(
-                cards_and_text[str(table.playedcards[-1])],
-                (
-                    int((width / 2)
-                        - cards_and_text[str(table.playedcards[-1])].get_width() / 2),
-                    int(height / 2 - height / 10)
+            height_rect = int(height/5)
+            # for an aspect ratio of 309 to 436 the factor 0.708715596 is needed
+            width_rect = int(0.708715596 * height_rect)
+            middlesize_rect = pygame.Rect(
+                (int((width/2)-width_rect/2), int(height / 2-(height/5))),
+                (width_rect, height_rect)
                 )
+            self.screen.blit(
+                pygame.transform.smoothscale(cards_and_pic[str(
+                    table.playedcards[-1])], (middlesize_rect.w, middlesize_rect.h)), middlesize_rect
             )
 
             # fps counter
