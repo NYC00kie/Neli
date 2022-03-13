@@ -6,7 +6,7 @@ sys.path.append(".")
 
 def main():
     """the main function"""
-    draw = Draw()
+    draw = Draw(playercount=1, npccount=1)
     draw.drawgame()
 
 
