@@ -75,11 +75,10 @@ class Draw():
 
     def drawgame(self):
         """method to draw the current state of the game"""
-        #
+
         # Draw the current Card in the Middle of the screen
         # Draw the Players Cards in the Bottom of the Screen
         # Move the hovered over Card a bit up
-        #
 
         # set screen
         self.screen = self.pygame.display.set_mode(
