@@ -213,7 +213,7 @@ class Table():
         self.indexcurrplayer = 0
         commonmemdict["curr_player_index"] = self.indexcurrplayer
 
-        # Gameloop and drawloop will be seperate.
+        # Gameloop and Drawloop will be seperate.
         # They will only share a common dictionary, which is how they will communicate and share data
 
         while commonmemdict["rungame"] and not event.is_set():
