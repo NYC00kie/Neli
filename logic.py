@@ -8,7 +8,6 @@ class Card():
 
     def __init__(self, val: str, color: str):
         """needs a cards value (0,1,2,3,4,5,6,7,8,9,SKIP,REVERSE,DRAW2,WILDCARD,WILDCARD4) and its color (RED,GREEN,BLUE,YELLOW,BLACK)"""
-        super(Card, self).__init__()
         self.color = color
         self.value = val
 
@@ -23,7 +22,6 @@ class Deck():
     """docstring for Deck."""
 
     def __init__(self, table, shuffled=True):
-        super(Deck, self).__init__()
 
         self.shuffled = shuffled
         self.undrawncards = self.generatecards()
@@ -71,7 +69,6 @@ class Hand():
     """docstring for Hand."""
 
     def __init__(self, table, isplayer: bool):
-        super(Hand, self).__init__()
         self.holding = []
         self.table = table
         self.deck = self.table.deck
@@ -95,7 +92,6 @@ class Table():
     """docstring for Table."""
 
     def __init__(self, playercount: int = 2, npccount: int = 2, shuffled: bool = True):
-        super(Table).__init__()
         self.deck = Deck(table=self, shuffled=shuffled)
         self.playedcards = self.deck.playedcards
         self.players = self.createplayers(playercount, npccount)
