@@ -1,12 +1,13 @@
+"""mainfile"""
 import sys
+from draw import Draw
 sys.path.append(".")
-from Draw import Draw
-
 
 
 def main():
-    d = Draw()
-    d.drawgame()
+    """the main function"""
+    draw = Draw()
+    draw.drawgame()
 
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+"""docstring for logic. """
 import random
 import time
 
@@ -13,6 +14,9 @@ class Card():
 
     def __str__(self):
         return f"{self.color} {self.value}"
+
+    def __eq__(self, other) -> bool:
+        return self.color == other.color and self.value == other.value
 
 
 class Deck():
@@ -94,10 +98,10 @@ class Table():
         super(Table).__init__()
         self.deck = Deck(table=self, shuffled=shuffled)
         self.playedcards = self.deck.playedcards
-        self.players = self.createPlayers(playercount, npccount)
+        self.players = self.createplayers(playercount, npccount)
         self.indexcurrplayer = 0
 
-    def createPlayers(self, playercount: int, npccount: int) -> list:
+    def createplayers(self, playercount: int, npccount: int) -> list:
         """Returns a list of Hand objects
         Creates Hands for the supplied amount of players and nonplayers"""
         hands = []
@@ -134,7 +138,6 @@ class Table():
 
     def blackcardfunctionality(self):
         """returns the color of the next Card"""
-        pass
 
     def cardfunctionality(self, playedcard, commonmemdict) -> None:
         """Method checks if the Card Played was a Special Card and what effect it has"""
@@ -188,7 +191,9 @@ class Table():
         self.players[self.indexcurrplayer].playcard(playedcard)
         self.indexcurrplayer += 1
 
-    def npcmove(self, event, commonmemdict):
+    def npcmove(self, commonmemdict) -> None:
+        """tests if the npc needs to draw a card.
+        then it checks all valid cards it can play and chooses one at random and plays it"""
         print(
             len(self.players[self.indexcurrplayer].holding), self.indexcurrplayer)
         if self.needdraw(self.players[self.indexcurrplayer]):
@@ -207,6 +212,8 @@ class Table():
         self.indexcurrplayer += 1
 
     def gameloop(self, commonmemdict, event):
+        """Function for the main gameloop
+        It gets called by the main thread"""
         self.indexcurrplayer = 0
         commonmemdict["curr_player_index"] = self.indexcurrplayer
 
@@ -222,12 +229,6 @@ class Table():
             if player.isplayer:
                 self.pcmove(event=event, commonmemdict=commonmemdict)
             else:
-                self.npcmove(event=event, commonmemdict=commonmemdict)
+                self.npcmove(commonmemdict=commonmemdict)
 
             self.indexcurrplayer = self.indexcurrplayer % len(self.players)
-
-
-if __name__ == '__main__':
-    d = Table(2, 0)
-    d.startgame()
-    d.gameloop({"rungame": True})

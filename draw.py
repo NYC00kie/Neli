@@ -1,23 +1,26 @@
-import pygame
+"""docstring for draw."""
 import sys
 import random
-from Logic import Table
 from threading import Thread
 import threading
-import time
+import pygame
+from logic import Table
 
 
 class Draw():
+    """docstring for class Draw."""
 
     def __init__(self):
         pygame.init()
         self.pygame = pygame
         self.menudimension = (700, 600)
         self.clock = pygame.time.Clock()
-        self.bg = f"./Backgrounds/bg-{random.randint(1,5)}.jpg"
+        self.background = f"./Backgrounds/bg-{random.randint(1,5)}.jpg"
         self.deckindex = 0
+        self.screen = self.pygame.display.set_mode(self.menudimension)
 
     def update_fps(self, clock, font):
+        """updates the fps counter"""
         fps = str(int(clock.get_fps()))
         fps_text = font.render(fps, 1, pygame.Color("coral"))
         return fps_text
@@ -26,15 +29,14 @@ class Draw():
         """Checks if the mouse hovers over a card rectangle
         Returns the index of this card"""
 
-        for index in range(len(rects)):
-            if rects[index].collidepoint(pos):
-
+        for index, rect in enumerate(rects):
+            if rect.collidepoint(pos):
                 rects[index] = rects[index].move(
                     0, - int(self.screen.get_height() / 6))
-
         return rects
 
     def drawmenu(self):
+        """draws the menu"""
         self.screen = self.pygame.display.set_mode(self.menudimension)
 
         while True:
@@ -47,10 +49,9 @@ class Draw():
 
             self.screen.fill((60, 25, 60))
             self.pygame.display.update()
-        pass
 
     def drawgame(self):
-
+        """method to draw the current state of the game"""
         #
         # Draw the current Card in the Middle of the screen
         # Draw the Players Cards in the Bottom of the Screen
@@ -62,12 +63,11 @@ class Draw():
             self.menudimension)
 
         # set values that need to be initialised before the loop
-        count = 0
         width, height = self.screen.get_width(), self.screen.get_height()
         rects = []
         clockfont = pygame.font.SysFont("Arial", 18)
 
-        background = self.bg
+        background = self.background
         bgimg = pygame.transform.smoothscale(pygame.image.load(
             background).convert_alpha(), (width, height))
 
@@ -92,7 +92,7 @@ class Draw():
         font = pygame.font.SysFont("dejavusans", 12)
         cards_and_text = {}
         cards_and_pic = {}
-        for card in [x for x in table.deck.undrawncards]:
+        for card in table.deck.undrawncards:
             paf = f"./Deck{self.deckindex}/{card.color}-{card.value}-min.bmp"
             img = pygame.image.load(paf).convert_alpha()
             cards_and_pic[str(card)] = img
