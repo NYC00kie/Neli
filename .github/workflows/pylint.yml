@@ -1,12 +1,10 @@
 name: Pylint
 
 on: [push]
-runs-on: self-hosted
-
 jobs:
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
