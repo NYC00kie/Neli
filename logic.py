@@ -219,7 +219,7 @@ class Table():
         while commonmemdict["rungame"] and not event.is_set():
 
             commonmemdict["curr_player_index"] = self.indexcurrplayer
-            time.sleep(0.5)
+            # time.sleep(0.005)
             player = self.players[self.indexcurrplayer]
 
             if player.isplayer:

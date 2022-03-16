@@ -3,6 +3,7 @@ import sys
 import random
 from threading import Thread
 import threading
+import copy
 import pygame
 from logic import Table
 
@@ -94,7 +95,9 @@ class Draw():
 
         # the curr_player_index gets overwritten directly in the gamethread but this might be needed for some systems
         commonmemdict = {"rungame": True, "curr_player_index": 0}
-
+        hand = copy.deepcopy(
+            self.table.players[commonmemdict["curr_player_index"]].holding)
+        print(self.cards_and_pic)
         # init the game and start the gameloop thread
 
         eventobj = threading.Event()
@@ -114,6 +117,8 @@ class Draw():
             pressed_keys = pygame.key.get_pressed()
             mousepos = pygame.mouse.get_pos()
 
+            self.clock.tick(90)
+
             for event in events:
                 if event.type == pygame.QUIT or pressed_keys[pygame.K_ESCAPE]:
                     # need to correctly close the game
@@ -130,10 +135,8 @@ class Draw():
                                        eventobj, mousepos)
 
             # Recompute Rects for Player Cards
-            hand = self.table.players[commonmemdict["curr_player_index"]].holding
-
-            # clock tick needed here else it crashes because the length of the hand ist not equal to the length of rects
-            self.clock.tick(15)
+            hand = copy.deepcopy(
+                self.table.players[commonmemdict["curr_player_index"]].holding)
 
             rects = []
             for index in range(len(hand)):
@@ -154,7 +157,9 @@ class Draw():
             for index, rect in enumerate(rects):
 
                 transformed = pygame.transform.smoothscale(
-                    self.cards_and_pic[str(hand[index])], (rect.w, rect.h))
+                    self.cards_and_pic[str(hand[index])],
+                    (rect.w, rect.h)
+                )
                 self.screen.blit(transformed, rect)
                 pygame.draw.rect(self.screen, "GREEN", rect, 2)
 
@@ -168,8 +173,8 @@ class Draw():
                 )
 
             self.screen.blit(
-                pygame.transform.smoothscale(self.cards_and_pic[str(
-                    self.table.playedcards[-1])], (middlesize_rect.w, middlesize_rect.h)), middlesize_rect
+                pygame.transform.smoothscale(
+                    self.cards_and_pic[str(self.table.playedcards[-1])], (middlesize_rect.w, middlesize_rect.h)), middlesize_rect
             )
 
             # fps counter
