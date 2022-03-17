@@ -1,4 +1,4 @@
-"""docstring for draw."""
+"""#docstring for draw."""
 import sys
 import random
 from threading import Thread
@@ -9,15 +9,15 @@ from logic import Table
 
 
 def update_fps(clock, font):
-    """updates the fps counter"""
+    """#updates the fps counter"""
     fps = str(int(clock.get_fps()))
     fps_text = font.render(fps, 1, pygame.Color("coral"))
     return fps_text
 
 
 def checkcardclick(rects, commonmemdict, eventobj, mousepos):
-    """check if the click was on a card
-    if it was then tell the game thread which card and set the event object"""
+    """#check if the click was on a card
+    #if it was then tell the game thread which card and set the event object"""
     for index, rect in enumerate(rects):
         if rect.collidepoint(mousepos):
             commonmemdict["index_playedcard"] = index
@@ -25,7 +25,7 @@ def checkcardclick(rects, commonmemdict, eventobj, mousepos):
 
 
 class Draw():
-    """docstring for class Draw."""
+    """#docstring for class Draw."""
 
     def __init__(self, playercount: int, npccount: int):
         pygame.init()
@@ -48,7 +48,7 @@ class Draw():
         print(self.bg_average_color, self.inverted_bgavgcolor)
 
     def generatecardimages(self):
-        """generates the card images for display"""
+        """#generates the card images for display"""
         cards_and_pic = {}
         for card in self.table.deck.undrawncards:
             paf = f"./Deck{self.deckindex}/{card.color}-{card.value}-min.bmp"
@@ -58,8 +58,8 @@ class Draw():
         return cards_and_pic
 
     def movecard_onhover(self, pos, rects):
-        """Checks if the mouse hovers over a card rectangle
-        Returns the index of this card"""
+        """#Checks if the mouse hovers over a card rectangle
+        #Returns the index of this card"""
 
         for index, rect in enumerate(rects):
             if rect.collidepoint(pos):
@@ -68,7 +68,7 @@ class Draw():
         return rects
 
     def drawmenu(self):
-        """draws the menu"""
+        """#draws the menu"""
         self.screen = self.pygame.display.set_mode(self.menudimension)
 
         while True:
@@ -83,7 +83,7 @@ class Draw():
             self.pygame.display.update()
 
     def drawgame(self):
-        """method to draw the current state of the game"""
+        """#method to draw the current state of the game"""
 
         # Draw the current Card in the Middle of the screen
         # Draw the Players Cards in the Bottom of the Screen
