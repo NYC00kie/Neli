@@ -105,7 +105,7 @@ class Draw():
         commonmemdict = {"rungame": True, "curr_player_index": 0}
         hand = copy.deepcopy(
             self.table.players[commonmemdict["curr_player_index"]].holding)
-        print(self.cards_and_pic)
+
         # init the game and start the gameloop thread
 
         eventobj = threading.Event()
@@ -113,8 +113,6 @@ class Draw():
                             args=(commonmemdict, eventobj))
 
         gamethread.start()
-
-        # generate the fonts, pictures etc. for displaying cards
 
         self.table.startgame()
 
