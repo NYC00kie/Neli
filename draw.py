@@ -113,7 +113,6 @@ class Draw():
         width, height = self.screen.get_width(), self.screen.get_height()
         rects = []
 
-        background = self.background
         bgimg = pygame.transform.smoothscale(
             self.backgroundimg, (width, height))
 
