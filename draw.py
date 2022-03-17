@@ -131,7 +131,7 @@ class Draw():
 
         self.table.startgame()
 
-        while True:
+        while commonmemdict["rungame"]:
 
             self.screen.blit(bgimg, (0, 0))
             events = pygame.event.get()

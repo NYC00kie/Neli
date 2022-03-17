@@ -85,12 +85,14 @@ class Hand():
         self.table = table
         self.deck = self.table.deck
         self.isplayer = isplayer
+        self.saiduno = True
 
     def drawcard(self, amount: int = 1):
         """
         #Draws a card from the deck and uses the draw function of the deck.
         #draws the amount of cards that is given (default 1)
         """
+
         for _ in range(amount):
             card = self.deck.drawcard()
             self.holding.append(card)
@@ -127,7 +129,7 @@ class Table():
             hands.append(Hand(self, isplayer=False))
         return hands
 
-    def startgame(self):
+    def startgame(self) -> None:
         """
         #initialize the players cards and the top card to start the game
         """
@@ -158,7 +160,7 @@ class Table():
         """
         return True
 
-    def blackcardfunctionality(self):
+    def blackcardfunctionality(self) -> None:
         """
         #returns the color of the next Card
         """
@@ -199,7 +201,6 @@ class Table():
             len(self.players[self.indexcurrplayer].holding), self.indexcurrplayer)
         if self.needdraw(self.players[self.indexcurrplayer]):
             self.players[self.indexcurrplayer].drawcard(1)
-            self.indexcurrplayer += 1
             return
 
         # loop and wait until the main thread sets the event flag to true.
@@ -217,7 +218,6 @@ class Table():
             return
         self.cardfunctionality(playedcard, commonmemdict)
         self.players[self.indexcurrplayer].playcard(playedcard)
-        self.indexcurrplayer += 1
 
     def npcmove(self, commonmemdict) -> None:
         """
@@ -228,7 +228,6 @@ class Table():
             len(self.players[self.indexcurrplayer].holding), self.indexcurrplayer)
         if self.needdraw(self.players[self.indexcurrplayer]):
             self.players[self.indexcurrplayer].drawcard(1)
-            self.indexcurrplayer += 1
             return
 
         validcards = []
@@ -239,9 +238,26 @@ class Table():
         chosencard = random.choice(validcards)
         self.cardfunctionality(chosencard, commonmemdict)
         self.players[self.indexcurrplayer].playcard(chosencard)
-        self.indexcurrplayer += 1
 
-    def gameloop(self, commonmemdict, event):
+    def checkwin(self) -> bool:
+        """
+        #checks wether the current player has won the game
+        #returns True if the current Player has no cards and said uno
+        #returns False if the current Player has more then 0 cards
+        """
+        if len(self.players[self.indexcurrplayer].holding) > 0:
+
+            return False
+        else:
+            # didn't say Uno
+            if not self.players[self.indexcurrplayer].saiduno:
+                self.players[self.indexcurrplayer].drawcard(2)
+                return False
+            # said Uno
+            else:
+                return True
+
+    def gameloop(self, commonmemdict, event) -> None:
         """
         #Function for the main gameloop
         #It gets called by the main thread
@@ -262,5 +278,11 @@ class Table():
                 self.pcmove(event=event, commonmemdict=commonmemdict)
             else:
                 self.npcmove(commonmemdict=commonmemdict)
+
+            if self.checkwin():
+                commonmemdict["rungame"] = False
+                break
+
+            self.indexcurrplayer += 1
 
             self.indexcurrplayer = self.indexcurrplayer % len(self.players)

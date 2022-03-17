@@ -10,7 +10,7 @@ def main():
     """
     # the main function
     """
-    draw = Draw(playercount=2, npccount=1)
+    draw = Draw(playercount=1, npccount=1)
     draw.drawgame()
 
 
