@@ -34,10 +34,18 @@ class Draw():
         self.table = Table(playercount=playercount, npccount=npccount)
         self.clock = pygame.time.Clock()
         self.clockfont = pygame.font.SysFont("Arial", 18)
-        self.background = f"./Backgrounds/bg-{random.randint(1,5)}.jpg"
+        self.playernumfont = pygame.font.SysFont("Arial", 25)
         self.deckindex = 0
         self.screen = self.pygame.display.set_mode(self.menudimension)
+        self.background = f"./Backgrounds/bg-{random.randint(1,5)}.jpg"
+        self.backgroundimg = pygame.image.load(self.background).convert()
         self.cards_and_pic = self.generatecardimages()
+        self.bg_average_color = pygame.transform.average_color(
+            self.backgroundimg)
+        self.inverted_bgavgcolor = [
+            255-self.bg_average_color[i] for i in range(0, 3)
+            ]
+        print(self.bg_average_color, self.inverted_bgavgcolor)
 
     def generatecardimages(self):
         """generates the card images for display"""
@@ -90,8 +98,8 @@ class Draw():
         rects = []
 
         background = self.background
-        bgimg = pygame.transform.smoothscale(pygame.image.load(
-            background).convert_alpha(), (width, height))
+        bgimg = pygame.transform.smoothscale(
+            self.backgroundimg, (width, height))
 
         # the curr_player_index gets overwritten directly in the gamethread but this might be needed for some systems
         commonmemdict = {"rungame": True, "curr_player_index": 0}
@@ -181,8 +189,9 @@ class Draw():
             self.screen.blit(update_fps(self.clock, self.clockfont), (10, 0))
 
             # Render the Players number in the top right corner
+
             playernum_txt = self.clockfont.render(
-                str(commonmemdict["curr_player_index"]), True, "#FFFFFF")
+                f"Player {str(commonmemdict['curr_player_index'])}", True, self.inverted_bgavgcolor)
 
             self.screen.blit(
                 playernum_txt, (width - playernum_txt.get_width(), 0))
