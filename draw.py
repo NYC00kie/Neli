@@ -1,4 +1,6 @@
-"""#docstring for draw."""
+"""
+#docstring for draw.
+"""
 import sys
 import random
 from threading import Thread
