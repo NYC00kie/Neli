@@ -1,11 +1,15 @@
-"""# mainfile"""
+"""
+# mainfile
+"""
 import sys
 from draw import Draw
 sys.path.append(".")
 
 
 def main():
-    """# the main function"""
+    """
+    # the main function
+    """
     draw = Draw(playercount=2, npccount=1)
     draw.drawgame()
 

@@ -1,12 +1,18 @@
-"""# docstring for logic. """
+"""
+# docstring for logic.
+"""
 import random
 
 
 class Card():
-    """# docstring for Cards."""
+    """
+    # docstring for Cards.
+    """
 
     def __init__(self, val: str, color: str):
-        """# needs a cards value (0,1,2,3,4,5,6,7,8,9,SKIP,REVERSE,DRAW2,WILDCARD,WILDCARD4) and its color (RED,GREEN,BLUE,YELLOW,BLACK)"""
+        """
+        # needs a cards value (0,1,2,3,4,5,6,7,8,9,SKIP,REVERSE,DRAW2,WILDCARD,WILDCARD4) and its color (RED,GREEN,BLUE,YELLOW,BLACK)
+        """
         self.color = color
         self.value = val
 
@@ -18,7 +24,9 @@ class Card():
 
 
 class Deck():
-    """# docstring for Deck."""
+    """
+    # docstring for Deck.
+    """
 
     def __init__(self, table, shuffled=True):
 
@@ -28,7 +36,8 @@ class Deck():
         self.table = table
 
     def generatecards(self):
-        """# Generates a cardset for a whole deck with 112 Cards in it.
+        """
+        # Generates a cardset for a whole deck with 112 Cards in it.
         # 26 Red, 26 Green, 26 Blue, 26 Yellow
         # With 0-9, Skip, Reverse and Draw2 twice per color.
         # Wildcard and Wildcard draw 4 each four times
@@ -53,7 +62,9 @@ class Deck():
         return cards
 
     def drawcard(self):
-        """#Takes the last card from the deck"""
+        """
+        #Takes the last card from the deck
+        """
 
         # generates a new Deck of Cards once a Deck is Empty
         if len(self.undrawncards) <= 0:
@@ -65,7 +76,9 @@ class Deck():
 
 
 class Hand():
-    """#docstring for Hand."""
+    """
+    #docstring for Hand.
+    """
 
     def __init__(self, table, isplayer: bool):
         self.holding = []
@@ -74,21 +87,27 @@ class Hand():
         self.isplayer = isplayer
 
     def drawcard(self, amount: int = 1):
-        """#Draws a card from the deck and uses the draw function of the deck.
-        #draws the amount of cards that is given (default 1)"""
+        """
+        #Draws a card from the deck and uses the draw function of the deck.
+        #draws the amount of cards that is given (default 1)
+        """
         for _ in range(amount):
             card = self.deck.drawcard()
             self.holding.append(card)
 
     def playcard(self, card):
-        """#Plays the given card"""
+        """
+        #Plays the given card
+        """
 
         self.table.playedcards.append(card)
         self.holding.pop(self.holding.index(card))
 
 
 class Table():
-    """#docstring for Table."""
+    """
+    #docstring for Table.
+    """
 
     def __init__(self, playercount: int = 2, npccount: int = 2, shuffled: bool = True):
         self.deck = Deck(table=self, shuffled=shuffled)
@@ -97,8 +116,10 @@ class Table():
         self.indexcurrplayer = 0
 
     def createplayers(self, playercount: int, npccount: int) -> list:
-        """#Returns a list of Hand objects
-        #Creates Hands for the supplied amount of players and nonplayers"""
+        """
+        #Returns a list of Hand objects
+        #Creates Hands for the supplied amount of players and nonplayers
+        """
         hands = []
         for _ in range(playercount):
             hands.append(Hand(self, isplayer=True))
@@ -107,14 +128,18 @@ class Table():
         return hands
 
     def startgame(self):
-        """#initialize the players cards and the top card to start the game"""
+        """
+        #initialize the players cards and the top card to start the game
+        """
         for player in self.players:
             player.drawcard(amount=7)
         self.playedcards.append(self.deck.drawcard())
 
     def needdraw(self, player) -> bool:
-        """#Check if the current Player can play a card
-        #Returns False if he can play a card"""
+        """
+        #Check if the current Player can play a card
+        #Returns False if he can play a card
+        """
 
         for card in player.holding:
 
@@ -127,15 +152,21 @@ class Table():
         return True
 
     def checkvalidityplacedcard(self, playcard) -> bool:
-        """#Returns False if it wasn't valid
-        #Returns True if it was valid"""
+        """
+        #Returns False if it wasn't valid
+        #Returns True if it was valid
+        """
         return True
 
     def blackcardfunctionality(self):
-        """#returns the color of the next Card"""
+        """
+        #returns the color of the next Card
+        """
 
     def cardfunctionality(self, playedcard, commonmemdict) -> None:
-        """#Method checks if the Card Played was a Special Card and what effect it has"""
+        """
+        #Method checks if the Card Played was a Special Card and what effect it has
+        """
         # Check for "SKIP", "REVERSE", "DRAW2", "WILDCARD", "WILDCARD4"
         if playedcard.value == "SKIP":
             return
@@ -156,12 +187,14 @@ class Table():
             return
 
     def pcmove(self, event, commonmemdict) -> None:
-        """#Test if the Player can't do anything besides drawing
+        """
+        #Test if the Player can't do anything besides drawing
         #If the player can only draw, then they autodraw
         ---
         #If the player can play a card,
         #then the Thread waits for the player to pick a card which is indicated by the eventobj flag beeing set to true
-        #the index of the played card is then shared via the common dictionary that the main and doughter thread share"""
+        #the index of the played card is then shared via the common dictionary that the main and doughter thread share
+        """
         print(
             len(self.players[self.indexcurrplayer].holding), self.indexcurrplayer)
         if self.needdraw(self.players[self.indexcurrplayer]):
@@ -187,8 +220,10 @@ class Table():
         self.indexcurrplayer += 1
 
     def npcmove(self, commonmemdict) -> None:
-        """#tests if the npc needs to draw a card.
-        #then it checks all valid cards it can play and chooses one at random and plays it"""
+        """
+        #tests if the npc needs to draw a card.
+        #then it checks all valid cards it can play and chooses one at random and plays it
+        """
         print(
             len(self.players[self.indexcurrplayer].holding), self.indexcurrplayer)
         if self.needdraw(self.players[self.indexcurrplayer]):
@@ -207,8 +242,10 @@ class Table():
         self.indexcurrplayer += 1
 
     def gameloop(self, commonmemdict, event):
-        """#Function for the main gameloop
-        #It gets called by the main thread"""
+        """
+        #Function for the main gameloop
+        #It gets called by the main thread
+        """
         self.indexcurrplayer = 0
         commonmemdict["curr_player_index"] = self.indexcurrplayer
 

@@ -1,6 +1,6 @@
 import translators as ts
 
-files_path = ["./logic.py", "./draw.py"]
+files_path = ["./logic.py", "./draw.py", "./main.py"]
 
 for file in files_path:
     file1 = open(file, 'r+')
