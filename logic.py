@@ -2,6 +2,7 @@
 # docstring for logic.
 """
 import random
+import time
 
 
 class Card():
@@ -276,6 +277,7 @@ class Table():
 
             if player.isplayer:
                 self.pcmove(event=event, commonmemdict=commonmemdict)
+                time.sleep(0.5)
             else:
                 self.npcmove(commonmemdict=commonmemdict)
 
