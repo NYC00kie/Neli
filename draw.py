@@ -98,7 +98,20 @@ class Draw():
         musicobject.set_volume(0.1)
         musicobject.play(-1)
 
-        callback = Mainmenu(self.drawgame, self.screen)
+        callback, partner, background, Mode = Mainmenu(
+            self.drawgame, self.screen)
+
+        playercount = 1
+        if partner:
+            playercount = 2
+
+        if Mode:
+            self.deckindex = 1
+
+        self.backgroundimg = background.convert()
+
+        self.Table = Table(playercount=playercount, npccount=1)
+        self.cards_and_pic = self.generatecardimages()
 
         musicobject.stop()
         callback()
