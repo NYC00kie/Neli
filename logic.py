@@ -93,7 +93,8 @@ class Hand():
         #Draws a card from the deck and uses the draw function of the deck.
         #draws the amount of cards that is given (default 1)
         """
-
+        self.saiduno = False
+        self.table.commonmemdict["pressed_uno"] = False
         for _ in range(amount):
             card = self.deck.drawcard()
             self.holding.append(card)
@@ -102,7 +103,7 @@ class Hand():
         """
         #Plays the given card
         """
-
+        self.saiduno = self.table.commonmemdict["pressed_uno"]
         self.table.playedcards.append(card)
         self.holding.pop(self.holding.index(card))
 
@@ -152,17 +153,7 @@ class Table():
 
         for card in player.holding:
 
-            # needed to check if the Person can Play a Card
-            # checks if the color or value of the card is the same as the current card laying on the table
-            # and if the color of the card laying on the table is not BLACK
-
-            black = (self.playedcards[-1].color
-                     == "BLACK" or card.color == "BLACK") and total_playable_cards > 0
-
-            same_partial_card = (
-                card.value == self.playedcards[-1].value or card.color == self.playedcards[-1].color)
-
-            if same_partial_card or black:
+            if self.checkvalidityplacedcard(card):
                 total_playable_cards += 1
 
         return total_playable_cards == 0
@@ -295,12 +286,13 @@ class Table():
         self.cardfunctionality(chosencard, commonmemdict,
                                None, chosencolor=chosencolor)
 
-    def checkwin(self) -> bool:
+    def checkwin(self, commonmemdict) -> bool:
         """
         #checks wether the current player has won the game
         #returns True if the current Player has no cards and said uno
         #returns False if the current Player has more then 0 cards
         """
+        commonmemdict["display_uno"] = False
         if len(self.players[self.indexcurrplayer].holding) > 0:
 
             return False
@@ -308,6 +300,7 @@ class Table():
             # didn't say Uno
             if not self.players[self.indexcurrplayer].saiduno:
                 self.players[self.indexcurrplayer].drawcard(2)
+                commonmemdict["display_uno"] = False
                 return False
             # said Uno
             else:
@@ -319,6 +312,7 @@ class Table():
         #It gets called by the main thread
         """
         self.indexcurrplayer = 0
+        self.commonmemdict = commonmemdict
         commonmemdict["curr_player_index"] = self.indexcurrplayer
         self.players[self.indexcurrplayer].holding = sorted(
             self.players[self.indexcurrplayer].holding, key=lambda card: card.color)
@@ -333,7 +327,8 @@ class Table():
             player.holding = sorted(
                 player.holding, key=lambda card: card.color, reverse=True)
 
-            print([card.color for card in player.holding])
+            if len(player.holding) < 2:
+                commonmemdict["display_uno"] = True
 
             if player.isplayer:
                 self.pcmove(event=event, commonmemdict=commonmemdict)
@@ -341,7 +336,7 @@ class Table():
             else:
                 self.npcmove(commonmemdict=commonmemdict)
 
-            if self.checkwin():
+            if self.checkwin(commonmemdict):
                 commonmemdict["rungame"] = False
                 break
 

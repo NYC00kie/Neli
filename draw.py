@@ -3,12 +3,14 @@
 """
 import sys
 import random
+import time
 from threading import Thread
 import threading
 import copy
 import pygame
 from logic import Table
 from logic import Card
+from button import Button
 
 
 def update_fps(clock, font):
@@ -190,6 +192,9 @@ class Draw():
 
         # init the game and start the gameloop thread
 
+        uno_btn = Button("Neli", (width/2, 0), 32,
+                         commonmemdict, bg="#777777", feedback="pressed")
+
         eventobj = threading.Event()
         gamethread = Thread(target=self.table.gameloop,
                             args=(commonmemdict, eventobj))
@@ -223,6 +228,7 @@ class Draw():
                     if mouse_presses[0]:
                         checkcardclick(rects, commonmemdict,
                                        eventobj, mousepos)
+                uno_btn.click(event)
 
             # Recompute Rects for Player Cards
             hand = copy.deepcopy(
@@ -232,7 +238,10 @@ class Draw():
             for index in range(len(hand)):
                 rect_posh = int(width / len(hand)) * index
                 rect_post = int(height - (height / 3))
-                rect_width = int(width / len(hand))
+                if len(hand) >= 4:
+                    rect_width = int(width / len(hand))
+                else:
+                    rect_width = int(width / 4)
                 rect_height = int(height / 3)
                 rect = pygame.Rect(
                     (rect_posh, rect_post),
@@ -278,10 +287,20 @@ class Draw():
             self.screen.blit(
                 playernum_txt, (width - playernum_txt.get_width(), 0))
 
+            if commonmemdict['display_uno']:
+                uno_btn.show(self.screen)
+
             self.pygame.display.update()
 
             if commonmemdict["display_wildcard_screen"]:
                 self.display_Wildcardchoose(commonmemdict, eventobj)
+
+        self.screen.fill((60, 25, 60))
+        end_font = pygame.font.SysFont("Arial", 18)
+        end_text = end_font.render("Ende", 1, pygame.Color("coral"))
+        self.screen.blit(end_text, (width/2, height/2))
+        self.pygame.display.update()
+        time.sleep(3)
 
 
 if __name__ == "__main__":
