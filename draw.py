@@ -287,14 +287,17 @@ class Draw():
             self.screen.blit(
                 playernum_txt, (width - playernum_txt.get_width(), 0))
 
+            # display Uno Button if necessary
             if commonmemdict['display_uno']:
                 uno_btn.show(self.screen)
 
             self.pygame.display.update()
 
+            # display the wildcard screen for choosing a color
             if commonmemdict["display_wildcard_screen"]:
                 self.display_Wildcardchoose(commonmemdict, eventobj)
 
+        # Ending Screen
         self.screen.fill((60, 25, 60))
         end_font = pygame.font.SysFont("Arial", 18)
         end_text = end_font.render("Ende", 1, pygame.Color("coral"))
