@@ -208,6 +208,8 @@ class Table():
             self.indexcurrplayer = (self.indexcurrplayer+1) % len(self.players)
             return
         elif playedcard.value == "DRAW2":
+            nextplayerindex = (self.indexcurrplayer+1) % len(self.players)
+            self.players[nextplayerindex].drawcard(amount=2)
             return
         elif playedcard.value == "WILDCARD":
             self.blackcardfunctionality(
