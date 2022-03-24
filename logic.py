@@ -12,7 +12,7 @@ class Card():
 
     def __init__(self, val: str, color: str):
         """
-        # needs a cards value (0,1,2,3,4,5,6,7,8,9,SKIP,REVERSE,DRAW2,WILDCARD,WILDCARD4) and its color (RED,GREEN,BLUE,YELLOW,BLACK)
+        # needs a cards value (0,1,2,3,4,5,6,7,8,9,SKIP,DRAW2,WILDCARD,WILDCARD4) and its color (RED,GREEN,BLUE,YELLOW,BLACK)
         """
         self.color = color
         self.value = val
@@ -136,13 +136,21 @@ class Table():
         """
         for player in self.players:
             player.drawcard(amount=7)
-        self.playedcards.append(self.deck.drawcard())
+
+        # draw until the card is not black
+        topcard = Card("WILDCARD", "BLACK")
+        topcard = self.deck.drawcard()
+        while topcard.color == "BLACK":
+            print(topcard)
+            topcard = self.deck.drawcard()
+        self.playedcards.append(topcard)
 
     def needdraw(self, player) -> bool:
         """
         #Check if the current Player can play a card
         #Returns False if he can play a card
         """
+        total_playable_cards = 0
 
         for card in player.holding:
 
@@ -150,23 +158,48 @@ class Table():
             # checks if the color or value of the card is the same as the current card laying on the table
             # and if the color of the card laying on the table is not BLACK
 
-            if (card.value == self.playedcards[-1].value or card.color == self.playedcards[-1].color) or self.playedcards[-1].color == "BLACK":
-                return False
-        return True
+            black = (self.playedcards[-1].color
+                     == "BLACK" or card.color == "BLACK") and total_playable_cards > 0
 
-    def checkvalidityplacedcard(self, playcard) -> bool:
+            same_partial_card = (
+                card.value == self.playedcards[-1].value or card.color == self.playedcards[-1].color)
+
+            if same_partial_card or black:
+                total_playable_cards += 1
+
+        if total_playable_cards == 0:
+            return True
+        else:
+            return False
+
+    def checkvalidityplacedcard(self, playedcard) -> bool:
         """
         #Returns False if it wasn't valid
         #Returns True if it was valid
         """
-        return True
+        latestcard = self.playedcards[-1]
+        if playedcard.value == latestcard.value or playedcard.color == latestcard.color or (playedcard.color == "BLACK" and latestcard.value != "EMPTY"):
+            return True
+        else:
+            return False
 
-    def blackcardfunctionality(self) -> None:
+    def blackcardfunctionality(self, commonmemdict, event, chosen_color) -> None:
         """
-        #returns the color of the next Card
+        #returns None
         """
+        if chosen_color == "":
+            commonmemdict["display_wildcard_screen"] = True
+            while not event.is_set():
+                event.wait(1)
 
-    def cardfunctionality(self, playedcard, commonmemdict) -> None:
+            event.clear()
+
+            chosen_color = commonmemdict["chosen_color"]
+
+        self.playedcards[-1] = Card("EMPTY", chosen_color)
+        print(self.playedcards[-1])
+
+    def cardfunctionality(self, playedcard, commonmemdict, event, chosencolor) -> None:
         """
         #Method checks if the Card Played was a Special Card and what effect it has
         """
@@ -178,10 +211,14 @@ class Table():
         elif playedcard.value == "DRAW2":
             return
         elif playedcard.value == "WILDCARD":
+            self.blackcardfunctionality(
+                commonmemdict=commonmemdict, event=event, chosen_color=chosencolor)
+
             return
         elif playedcard.value == "WILDCARD4":
             # copy pure wildcard implementation
-
+            self.blackcardfunctionality(
+                commonmemdict, event, chosen_color=chosencolor)
             # Draw 4 Cards
             print(self.indexcurrplayer, self.indexcurrplayer
                   + 1, (self.indexcurrplayer+1) % len(self.players))
@@ -216,9 +253,17 @@ class Table():
         # if its not then return the function without doing anything.
         # the loop will execute this function again and wait for a valid card
         if not self.checkvalidityplacedcard(playedcard):
+            self.indexcurrplayer = (self.indexcurrplayer-1) % len(self.players)
             return
-        self.cardfunctionality(playedcard, commonmemdict)
+
         self.players[self.indexcurrplayer].playcard(playedcard)
+        self.cardfunctionality(playedcard, commonmemdict, event, "")
+
+    def calc_chosen_color(self):
+        playerscards = self.players[self.indexcurrplayer].holding
+        colors = ["RED", "GREEN", "BLUE", "YELLOW"]
+        picked_color = colors[random.randint(0, 3)]
+        return picked_color
 
     def npcmove(self, commonmemdict) -> None:
         """
@@ -229,6 +274,7 @@ class Table():
             len(self.players[self.indexcurrplayer].holding), self.indexcurrplayer)
         if self.needdraw(self.players[self.indexcurrplayer]):
             self.players[self.indexcurrplayer].drawcard(1)
+
             return
 
         validcards = []
@@ -236,9 +282,13 @@ class Table():
             if self.checkvalidityplacedcard(card):
                 validcards.append(card)
 
+        chosencolor = self.calc_chosen_color()
+        print(chosencolor)
         chosencard = random.choice(validcards)
-        self.cardfunctionality(chosencard, commonmemdict)
+
         self.players[self.indexcurrplayer].playcard(chosencard)
+        self.cardfunctionality(chosencard, commonmemdict,
+                               None, chosencolor=chosencolor)
 
     def checkwin(self) -> bool:
         """
@@ -265,15 +315,20 @@ class Table():
         """
         self.indexcurrplayer = 0
         commonmemdict["curr_player_index"] = self.indexcurrplayer
-
+        self.players[self.indexcurrplayer].holding = sorted(
+            self.players[self.indexcurrplayer].holding, key=lambda card: card.color)
         # Gameloop and Drawloop will be seperate.
         # They will only share a common dictionary, which is how they will communicate and share data
 
         while commonmemdict["rungame"] and not event.is_set():
-
             commonmemdict["curr_player_index"] = self.indexcurrplayer
 
             player = self.players[self.indexcurrplayer]
+
+            player.holding = sorted(
+                player.holding, key=lambda card: card.color, reverse=True)
+
+            print([card.color for card in player.holding])
 
             if player.isplayer:
                 self.pcmove(event=event, commonmemdict=commonmemdict)
@@ -288,3 +343,5 @@ class Table():
             self.indexcurrplayer += 1
 
             self.indexcurrplayer = self.indexcurrplayer % len(self.players)
+
+            print(str(self.playedcards[-1]))

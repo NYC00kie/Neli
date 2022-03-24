@@ -8,6 +8,7 @@ import threading
 import copy
 import pygame
 from logic import Table
+from logic import Card
 
 
 def update_fps(clock, font):
@@ -60,11 +61,15 @@ class Draw():
         #generates the card images for display
         """
         cards_and_pic = {}
-        for card in self.table.deck.undrawncards:
+        drawy_cards = [Card("EMPTY", "BLUE"), Card("EMPTY", "GREEN"), Card(
+            "EMPTY", "RED"), Card("EMPTY", "YELLOW")]
+        drawy_cards += self.table.deck.undrawncards
+        for card in drawy_cards:
             paf = f"./Deck{self.deckindex}/{card.color}-{card.value}-min.bmp"
             img = pygame.image.load(paf).convert_alpha()
             cards_and_pic[str(card)] = img
 
+        print(cards_and_pic)
         return cards_and_pic
 
     def movecard_onhover(self, pos, rects):
@@ -95,6 +100,58 @@ class Draw():
 
             self.screen.fill((60, 25, 60))
             self.pygame.display.update()
+
+    def display_Wildcardchoose(self, commonmemdict, eventobj):
+        """displays a chosing screen for the wildcard card"""
+
+        width, height = self.screen.get_width(), self.screen.get_height()
+
+        Yellow = {
+            "name": "YELLOW",
+            "color": pygame.transform.average_color(self.cards_and_pic["YELLOW 1"]),
+            "rect": pygame.Rect(0, 0, width/2, height/2)}
+
+        Green = {
+            "name": "GREEN",
+            "color": pygame.transform.average_color(self.cards_and_pic["GREEN 1"]),
+            "rect": pygame.Rect(width/2, 0, width/2, height/2)
+            }
+
+        Red = {
+            "name": "RED",
+            "color": pygame.transform.average_color(self.cards_and_pic["RED 1"]),
+            "rect": pygame.Rect(0, height/2, width/2, height/2)
+            }
+
+        Blue = {
+            "name": "BLUE",
+            "color": pygame.transform.average_color(self.cards_and_pic["BLUE 1"]),
+            "rect": pygame.Rect(width/2, height/2, width/2, height/2)
+            }
+        print(Blue, Red, Green, Yellow)
+        pygame.draw.rect(self.screen, Yellow["color"], Yellow["rect"])
+        pygame.draw.rect(self.screen, Green["color"], Green["rect"])
+        pygame.draw.rect(self.screen, Red["color"], Red["rect"])
+        pygame.draw.rect(self.screen, Blue["color"], Blue["rect"])
+
+        self.pygame.display.update()
+        loop = True
+        while loop:
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_presses = pygame.mouse.get_pressed()
+                    if mouse_presses[0]:
+                        mousepos = pygame.mouse.get_pos()
+                        for color in [Blue, Red, Green, Yellow]:
+                            if color["rect"].collidepoint(mousepos):
+                                chosen_color = color["name"]
+                                loop = False
+                                break
+
+        commonmemdict["chosen_color"] = chosen_color
+        commonmemdict["display_wildcard_screen"] = False
+        eventobj.set()
 
     def drawgame(self):
         """
@@ -130,6 +187,8 @@ class Draw():
         gamethread.start()
 
         self.table.startgame()
+
+        commonmemdict["display_wildcard_screen"] = False
 
         while commonmemdict["rungame"]:
 
@@ -210,6 +269,9 @@ class Draw():
                 playernum_txt, (width - playernum_txt.get_width(), 0))
 
             self.pygame.display.update()
+
+            if commonmemdict["display_wildcard_screen"]:
+                self.display_Wildcardchoose(commonmemdict, eventobj)
 
 
 if __name__ == "__main__":
