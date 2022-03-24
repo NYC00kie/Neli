@@ -174,6 +174,11 @@ class Draw():
         # Draw the Players Cards in the Bottom of the Screen
         # Move the hovered over Card a bit up
 
+        # set music
+        musicobject = pygame.mixer.Sound("./Music/Spielsound_Neli.mp3")
+        musicobject.set_volume(0.1)
+        musicobject.play(-1)
+
         # set screen
         self.screen = self.pygame.display.set_mode(
             self.menudimension)
