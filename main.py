@@ -11,7 +11,7 @@ def main():
     # the main function
     """
     draw = Draw(playercount=1, npccount=1)
-    draw.drawgame()
+    draw.drawmenu()
 
 
 if __name__ == "__main__":

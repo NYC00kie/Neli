@@ -11,6 +11,7 @@ import pygame
 from logic import Table
 from logic import Card
 from button import Button
+from Menü.Mainmenu import Mainmenu
 
 
 def update_fps(clock, font):
@@ -93,16 +94,7 @@ class Draw():
         """
         self.screen = self.pygame.display.set_mode(self.menudimension)
 
-        while True:
-            self.clock.tick(30)
-            events = pygame.event.get()
-            pressed_keys = pygame.key.get_pressed()
-            for event in events:
-                if event.type == pygame.QUIT or pressed_keys[pygame.K_ESCAPE]:
-                    sys.exit()
-
-            self.screen.fill((60, 25, 60))
-            self.pygame.display.update()
+        Mainmenu(self.drawgame, self.screen)
 
     def display_Wildcardchoose(self, commonmemdict, eventobj) -> None:
         """
