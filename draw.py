@@ -94,7 +94,14 @@ class Draw():
         """
         self.screen = self.pygame.display.set_mode(self.menudimension)
 
-        Mainmenu(self.drawgame, self.screen)
+        musicobject = pygame.mixer.Sound("./Music/Sound_Startseite.mp3")
+        musicobject.set_volume(0.1)
+        musicobject.play(-1)
+
+        callback = Mainmenu(self.drawgame, self.screen)
+
+        musicobject.stop()
+        callback()
 
     def display_Wildcardchoose(self, commonmemdict, eventobj) -> None:
         """

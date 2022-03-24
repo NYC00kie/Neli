@@ -1,8 +1,7 @@
 import pygame
 import button
 
-#init pygame with all modules
-pygame.init()
+# Julia
 
 
 class Buetton():
@@ -104,8 +103,8 @@ def Mainmenu(callback, screen):  # Mainmenu
 
         #buttons
         if start_button.draw(screen):
-            #hier Start def einfügen
-            callback()
+            #hier Start def einfügen,
+            gameActive = False
 
         if bg_1_button.draw(screen):
             background = bg_1_img
@@ -149,6 +148,8 @@ def Mainmenu(callback, screen):  # Mainmenu
                     name += event.unicode
 
         pygame.display.update()
+
+    return callback
 
 
 def Anleitung(background, screen):  # anleitung
