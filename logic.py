@@ -1,5 +1,5 @@
 """
-#docstring for logic.
+# Docstring für Logik.
 """
 import random
 import time
@@ -7,12 +7,12 @@ import time
 
 class Card():
     """
-    #docstring for Cards.
+    # Docstring für Karten.
     """
 
     def __init__(self, val: str, color: str):
         """
-        #needs a cards value (0,1,2,3,4,5,6,7,8,9,SKIP,DRAW2,WILDCARD,WILDCARD4) and its color (RED,GREEN,BLUE,YELLOW,BLACK)
+        # Benötigt einen Kartenwert (0,1,2,3,4,5,6,7,8,9, überspringen, Draw2, Wildcard, Wildcard4) und seine Farbe (rot, grün, blau, gelb, schwarz)
         """
         self.color = color
         self.value = val
@@ -26,7 +26,7 @@ class Card():
 
 class Deck():
     """
-    #docstring for Deck.
+    # Docstring für Deck.
     """
 
     def __init__(self, table, shuffled=True):
@@ -38,12 +38,12 @@ class Deck():
 
     def generatecards(self):
         """
-        #Generates a cardset for a whole deck with 112 Cards in it.
-        #26 Red, 26 Green, 26 Blue, 26 Yellow
-        #With 0-9, Skip, Reverse and Draw2 twice per color.
-        #Wildcard and Wildcard draw 4 each four times
+        # Erzeugt ein Kartenset für ein ganzes Deck mit 112 Karten darin.
+        # 26 rot, 26 grün, 26 blau, 26 gelb
+        # Mit 0-9, überspringen, rückwärts und draw2 zweimal pro Farbe.
+        # Platzhalter- und Wildcard zeichnen 4 jeweils viermal
         """
-        # generate cards which are not Black
+        # Karten generieren, die nicht schwarz sind
         cards = []
         colors = ["RED", "GREEN", "BLUE", "YELLOW"]
         values = ["0", "1", "2", "3", "4", "5", "6",
@@ -52,7 +52,7 @@ class Deck():
             for val in values:
                 cards.append(Card(val=val, color=colr))
 
-        # generate cards which are Black
+        # Karten generieren, die schwarz sind
         for colr in ["BLACK"]:
             for val in ["WILDCARD", "WILDCARD4"] * 4:
                 cards.append(Card(val=val, color=colr))
@@ -64,10 +64,10 @@ class Deck():
 
     def drawcard(self):
         """
-        #Takes the last card from the deck
+        # Nimmt die letzte Karte aus dem Deck
         """
 
-        # generates a new Deck of Cards once a Deck is Empty
+        # erzeugt ein neues Kartenspiele, sobald ein Deck leer ist
         if len(self.undrawncards) <= 0:
             self.undrawncards = self.generatecards()
 
@@ -78,7 +78,7 @@ class Deck():
 
 class Hand():
     """
-    #docstring for Hand.
+    # Docstring für Hand.
     """
 
     def __init__(self, table, isplayer: bool):
@@ -90,8 +90,8 @@ class Hand():
 
     def drawcard(self, amount: int = 1):
         """
-        #Draws a card from the deck and uses the draw function of the deck.
-        #draws the amount of cards that is given (default 1)
+        # Zeichnet eine Karte aus dem Deck und verwendet die Zeichnungsfunktion des Decks.
+        # Zeichnet die Menge der angegebenen Karten (Standard 1)
         """
         self.saiduno = False
         self.table.commonmemdict["pressed_uno"] = False
@@ -101,7 +101,7 @@ class Hand():
 
     def playcard(self, card):
         """
-        #Plays the given card
+        # Spielt die angegebene Karte
         """
         self.saiduno = self.table.commonmemdict["pressed_uno"]
         self.table.playedcards.append(card)
@@ -110,7 +110,7 @@ class Hand():
 
 class Table():
     """
-    #docstring for Table.
+    # Docstring für Tabelle.
     """
 
     def __init__(self, playercount: int = 2, npccount: int = 2, shuffled: bool = True):
@@ -121,8 +121,8 @@ class Table():
 
     def createplayers(self, playercount: int, npccount: int) -> list:
         """
-        #Returns a list of Hand objects
-        #Creates Hands for the supplied amount of players and nonplayers
+        # Gibt eine Liste von Handobjekten zurück
+        # Erzeugt Hände für den mitgelieferten Betrag der Spieler und Nichtspieler
         """
         hands = []
         for _ in range(playercount):
@@ -133,12 +133,12 @@ class Table():
 
     def startgame(self) -> None:
         """
-        #initialize the players cards and the top card to start the game
+        # Initialisieren Sie die Spielerkarten und die oberste Karte, um das Spiel zu starten
         """
         for player in self.players:
             player.drawcard(amount=7)
 
-        # draw until the card is not black
+        # Zeichnen, bis die Karte nicht schwarz ist
         topcard = self.deck.drawcard()
         while topcard.color == "BLACK":
             topcard = self.deck.drawcard()
@@ -146,8 +146,8 @@ class Table():
 
     def needdraw(self, player) -> bool:
         """
-        #Check if the current Player can play a card
-        #Returns False if he can play a card
+        # Prüfen Sie, ob der aktuelle Spieler eine Karte abspielen kann
+        # Gibt false zurück, wenn er eine Karte spielen kann
         """
         total_playable_cards = 0
 
@@ -160,12 +160,12 @@ class Table():
 
     def checkvalidityplacedcard(self, playedcard) -> bool:
         """
-        #Returns False if it wasn't a valid move
-        #Returns True if it was valid
+        # Gibt false zurück, wenn es kein gültiger Schritt wäre
+        # Gibt true zurück, wenn es gültig gilt
         """
         latestcard = self.playedcards[-1]
 
-        # check if colors or values match or if the played card ist black and the latest played card is not from a WILDCARD
+        # Prüfen Sie, ob Farben oder Werte übereinstimmen oder wenn die gespielte Karte schwarz ist und die neueste gespielte Karte nicht von einem Platzhalter ist
         if playedcard.value == latestcard.value or playedcard.color == latestcard.color or (playedcard.color == "BLACK" and latestcard.value != "EMPTY"):
             return True
 
@@ -173,14 +173,14 @@ class Table():
 
     def blackcardfunctionality(self, commonmemdict, event, chosen_color) -> None:
         """
-        #returns None
-        #Replaces the Wildcard with a Blank Card of the Chosen Color
+        # Gibt keine zurück
+        # Ersetzt die Wildcard mit einer leeren Karte der gewählten Farbe
         """
-        # a color can be supplied to the function
-        # this is only done by npcs
+        # Eine Farbe kann der Funktion geliefert werden
+        # Dies erfolgt nur von NPCs
         if chosen_color == "":
             commonmemdict["display_wildcard_screen"] = True
-            # waiting for userinput
+            # warte auf Eingabe des Benutzers
             while not event.is_set():
                 event.wait(1)
 
@@ -192,41 +192,41 @@ class Table():
 
     def cardfunctionality(self, playedcard, commonmemdict, event, chosencolor) -> None:
         """
-        #Method checks if the Card Played was a Special Card and what effect it has
+        # Methode prüft, ob die gespielte Karte eine spezielle Karte war und welche Auswirkungen er hat
         """
-        # Check for "SKIP", "REVERSE", "DRAW2", "WILDCARD", "WILDCARD4"
+        # Prüfen Sie auf "Skip", "umgekehrt", "draw2", "wildcard", "wildcard4"
         if playedcard.value == "SKIP":
-            # skip to the next player
-            # this works because back in the mainloop the index of the current player again gets incremented by one
+            # Zum nächsten Spieler springen
+            # Dies funktioniert, weil wieder in der MainLoop der Index des aktuellen Spielers erneut von einem inkrementiert wird
             self.indexcurrplayer = (self.indexcurrplayer+1) % len(self.players)
 
         elif playedcard.value == "DRAW2":
-            # makes the next Player draw 2 Cards by calling the draw function on them
+            # Macht den nächsten Spieler 2 Karten, indem Sie die Zeichnungsfunktion auf sie aufrufen
             nextplayerindex = (self.indexcurrplayer+1) % len(self.players)
             self.players[nextplayerindex].drawcard(amount=2)
 
         elif playedcard.value == "WILDCARD":
-            # call the blackcardfunctionality function
+            # Rufen Sie die Blackcardfunctionalitätsfunktion an
             self.blackcardfunctionality(
                 commonmemdict=commonmemdict, event=event, chosen_color=chosencolor)
 
         elif playedcard.value == "WILDCARD4":
-            # copy pure wildcard implementation
+            # Pure Wildcard-Implementierung kopieren
             self.blackcardfunctionality(
                 commonmemdict, event, chosen_color=chosencolor)
 
-            # makes the next Player draw 4 Cards by calling the draw funtion on them
+            # Macht den nächsten Spieler 4 Karten, indem Sie die Zeichnungsfunktion anrufen
             nextplayerindex = (self.indexcurrplayer+1) % len(self.players)
             self.players[nextplayerindex].drawcard(amount=4)
 
     def pcmove(self, event, commonmemdict) -> None:
         """
-        #Test if the Player can't do anything besides drawing
-        #If the player can only draw, then they autodraw
+        # Testen Sie, wenn der Spieler nicht neben der Zeichnung nichts tun kann
+        # Wenn der Spieler nur zeichnen kann, dann autodraw
         ---
-        #If the player can play a card,
-        #then the Thread waits for the player to pick a card which is indicated by the eventobj flag beeing set to true
-        #the index of the played card is then shared via the common dictionary that the main and doughter thread share
+        # Wenn der Spieler eine Karte spielen kann,
+        # Dann wartet der Thread auf den Player, um eine Karte auszuwählen, die von der EVENTOBJ-Fahnenbeeide angezeigt wird, die auf TRUE eingestellt ist
+        # Der Index der abgespielten Karte wird dann über das allgemeine Wörterbuch geteilt, das der Haupt- und Temperfaden-Anteil
         """
         print(
             len(self.players[self.indexcurrplayer].holding), self.indexcurrplayer)
@@ -234,17 +234,17 @@ class Table():
             self.players[self.indexcurrplayer].drawcard(1)
             return
 
-        # loop and wait until the main thread sets the event flag to true.
-        # then leave the loop, clear the event flag and play the card, which the player chose
+        # Schleife und warten, bis der Hauptthread das Ereignis-Flag auf true setzt.
+        # Dann verlassen Sie die Schleife, löschen Sie das Ereignis-Flag und spiele die Karte, die der Spieler entschieden hat
         while not event.is_set():
             event.wait(1)
 
         event.clear()
         playedcard = self.players[self.indexcurrplayer].holding[commonmemdict["index_playedcard"]]
 
-        # check if the selected card is playable:
-        # if its not then return the function without doing anything.
-        # the loop will execute this function again and wait for a valid card
+        # Prüfen Sie, ob die ausgewählte Karte spielbar ist:
+        # Wenn es nicht dann die Funktion zurückgibt, ohne etwas zu tun.
+        # Die Schleife führt diese Funktion wieder aus, und warten Sie auf eine gültige Karte
         if not self.checkvalidityplacedcard(playedcard):
             self.indexcurrplayer = (self.indexcurrplayer-1) % len(self.players)
             return
@@ -254,7 +254,7 @@ class Table():
 
     def calc_chosen_color(self):
         """
-        #calculates the color the pick for the n
+        # Berechnet die Farbe die Auswahl für den n
         """
 
         colors = ["RED", "GREEN", "BLUE", "YELLOW"]
@@ -263,8 +263,8 @@ class Table():
 
     def npcmove(self, commonmemdict) -> None:
         """
-        #tests if the npc needs to draw a card.
-        #then it checks all valid cards it can play and chooses one at random and plays it
+        # Tests, wenn der NPC eine Karte zeichnen muss.
+        # Dann prüft es alle gültigen Karten, die sie spielen können, und wählen Sie einen zufälligen und spielt sie
         """
         print(
             len(self.players[self.indexcurrplayer].holding), self.indexcurrplayer)
@@ -288,36 +288,36 @@ class Table():
 
     def checkwin(self, commonmemdict) -> bool:
         """
-        #checks wether the current player has won the game
-        #returns True if the current Player has no cards and said uno
-        #returns False if the current Player has more then 0 cards
+        # prüft, ob der aktuelle Spieler das Spiel gewonnen hat
+        # Gibt true zurück, wenn der aktuelle Spieler keine Karten hat und UNO gesagt hat
+        # Gibt false zurück, wenn der aktuelle Spieler mehr als 0 Karten hat
         """
         commonmemdict["display_uno"] = False
         if len(self.players[self.indexcurrplayer].holding) > 0:
 
             return False
         else:
-            # didn't say Uno
+            # habe nicht uno gesagt
             if not self.players[self.indexcurrplayer].saiduno:
                 self.players[self.indexcurrplayer].drawcard(2)
                 commonmemdict["display_uno"] = False
                 return False
-            # said Uno
+            # sagte Uno.
             else:
                 return True
 
     def gameloop(self, commonmemdict, event) -> None:
         """
-        #Function for the main gameloop
-        #It gets called by the main thread
+        # Funktion für den wichtigsten Gameloop
+        # Es wird vom Hauptfaden aufgerufen
         """
         self.indexcurrplayer = 0
         self.commonmemdict = commonmemdict
         commonmemdict["curr_player_index"] = self.indexcurrplayer
         self.players[self.indexcurrplayer].holding = sorted(
             self.players[self.indexcurrplayer].holding, key=lambda card: card.color)
-        # Gameloop and Drawloop will be seperate.
-        # They will only share a common dictionary, which is how they will communicate and share data
+        # Gameloop und Drawoop werden getrennt sein.
+        # Sie teilen nur ein allgemeines Wörterbuch, mit dem sie Daten kommunizieren und teilen
 
         while commonmemdict["rungame"] and not event.is_set():
             commonmemdict["curr_player_index"] = self.indexcurrplayer
@@ -343,3 +343,4 @@ class Table():
             self.indexcurrplayer += 1
 
             self.indexcurrplayer = self.indexcurrplayer % len(self.players)
+

@@ -1,5 +1,5 @@
 """
-#docstring for draw.
+# docstring für unentschieden.
 """
 import sys
 import random
@@ -16,7 +16,7 @@ from Menü.Mainmenu import Mainmenu
 
 def update_fps(clock, font):
     """
-    #updates the fps counter
+    # aktualisiert den FPS-Zähler
     """
     fps = str(int(clock.get_fps()))
     fps_text = font.render(fps, 1, pygame.Color("coral"))
@@ -25,8 +25,8 @@ def update_fps(clock, font):
 
 def checkcardclick(rects, commonmemdict, eventobj, mousepos):
     """
-    #check if the click was on a card
-    #if it was then tell the game thread which card and set the event object
+    # Prüfen Sie, ob der Klick auf einer Karte war
+    # Wenn es dann dem Spiel Thread mitgeteilt hätte, welche Karte und das Ereignisobjekt einstellen
     """
     for index, rect in enumerate(rects):
         if rect.collidepoint(mousepos):
@@ -36,7 +36,7 @@ def checkcardclick(rects, commonmemdict, eventobj, mousepos):
 
 class Draw():
     """
-    #docstring for class Draw.
+    # docstring für den Klassenzug.
     """
 
     def __init__(self, playercount: int, npccount: int):
@@ -61,7 +61,7 @@ class Draw():
 
     def generatecardimages(self):
         """
-        #generates the card images for display
+        # Erzeugt die Kartenbilder für die Anzeige
         """
         cards_and_pic = {}
         drawy_cards = [Card("EMPTY", "BLUE"), Card("EMPTY", "GREEN"), Card(
@@ -77,8 +77,8 @@ class Draw():
 
     def movecard_onhover(self, pos, rects):
         """
-        #Checks if the mouse hovers over a card rectangle
-        #Returns the index of this card
+        # Prüft, ob die Maus über ein Kartenrechteck schwebt
+        # Gibt den Index dieser Karte zurück
         """
 
         for index, rect in enumerate(rects):
@@ -89,8 +89,8 @@ class Draw():
 
     def drawmenu(self):
         """
-        #draws the menu
-        #not yet implemented because the code was not given to me
+        # Zeichnet das Menü an
+        # noch nicht implementiert, weil mir der Code nicht gegeben wurde
         """
         self.screen = self.pygame.display.set_mode(self.menudimension)
 
@@ -118,14 +118,14 @@ class Draw():
 
     def display_Wildcardchoose(self, commonmemdict, eventobj) -> None:
         """
-        #Returns None
-        #displays a chosing screen for the wildcard card
-        #A 2 by 2 Pattern of colors will be displayed with the colors equal to the Cards colors
+        # Gibt keine zurück
+        # Zeigt einen Ausschreibungsbildschirm für die Wildcard-Karte an
+        # A 2 x 2 Farbmuster wird mit den Farben angezeigt, die den Kartenfarben entsprechen
         """
 
-        # the Cards color gets determined by taking the average color
-        # of the Card with value of 1 and the corresponding colors
-        # what gets drawn by pygame are
+        # Die Kartenfarbe wird durch die Durchschnittsfarbe bestimmt
+        # der Karte mit dem Wert von 1 und den entsprechenden Farben
+        # Was von Pygame gezogen wird, sind
 
         width, height = self.screen.get_width(), self.screen.get_height()
 
@@ -158,7 +158,7 @@ class Draw():
         pygame.draw.rect(self.screen, Blue["color"], Blue["rect"])
 
         self.pygame.display.update()
-        # a color need to be chosen to leave this loop and to end the game
+        # Eine Farbe muss ausgewählt werden, um diese Schleife zu verlassen und das Spiel zu beenden
         loop = True
         while loop:
             events = pygame.event.get()
@@ -179,38 +179,38 @@ class Draw():
 
     def drawgame(self):
         """
-        #method to draw the current state of the game
+        # Methode, um den aktuellen Status des Spiels zu zeichnen
         """
 
-        # Draw the current Card in the Middle of the screen
-        # Draw the Players Cards in the Bottom of the Screen
-        # Move the hovered over Card a bit up
+        # Zeichnen Sie die aktuelle Karte in der Mitte des Bildschirms
+        # Zeichnen Sie die Spielerkarten in der Unterseite des Bildschirms
+        # Bewegen Sie die schwebende Überkarte ein bisschen auf
 
-        # set music
+        # Musik setzen
         musicobject = pygame.mixer.Sound("./Music/Spielsound_Neli.mp3")
         musicobject.set_volume(0.1)
         musicobject.play(-1)
 
-        # set screen
+        # Bildschirm einstellen
         self.screen = self.pygame.display.set_mode(
             self.menudimension)
 
-        # set values that need to be initialised before the loop
+        # Stellen Sie Werte ein, die vor der Schleife initialisiert werden müssen
         width, height = self.screen.get_width(), self.screen.get_height()
         rects = []
 
         bgimg = pygame.transform.smoothscale(
             self.backgroundimg, (width, height))
 
-        # the curr_player_index gets overwritten directly in the gamethread but this might be needed for some systems
+        # Der Curr_Player_Index wird direkt in der Gamethread überschrieben, aber dies ist möglicherweise für einige Systeme erforderlich
         commonmemdict = {"rungame": True, "curr_player_index": 0}
         hand = copy.deepcopy(
             self.table.players[commonmemdict["curr_player_index"]].holding)
 
-        # init the game and start the gameloop thread
+        # Zieh das Spiel an und starte den Gameloop-Thread
 
         uno_btn = Button("Neli", (width/2, 0), 32,
-                         commonmemdict, bg="#777777", feedback="pressed")
+                         commonmemdict, bg="# 777777 ", Feedback =" gedrückt ")
 
         eventobj = threading.Event()
         gamethread = Thread(target=self.table.gameloop,
@@ -233,13 +233,13 @@ class Draw():
 
             for event in events:
                 if event.type == pygame.QUIT or pressed_keys[pygame.K_ESCAPE]:
-                    # need to correctly close the game
+                    # müssen das Spiel richtig schließen
                     commonmemdict["index_playedcard"] = 0
                     eventobj.set()
                     commonmemdict["rungame"] = False
                     gamethread.join()
                     sys.exit()
-                # check for button press
+                # Überprüfen Sie die Taste, drücken Sie
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_presses = pygame.mouse.get_pressed()
                     if mouse_presses[0]:
@@ -247,7 +247,7 @@ class Draw():
                                        eventobj, mousepos)
                 uno_btn.click(event)
 
-            # Recompute Rects for Player Cards
+            # Zerlegen Sie die Funktionen für Spielerkarten
             hand = copy.deepcopy(
                 self.table.players[commonmemdict["curr_player_index"]].holding)
 
@@ -268,7 +268,7 @@ class Draw():
 
             rects = self.movecard_onhover(mousepos, rects)
 
-            # draw the cards in the Players Hand and draw rectangles around them
+            # Zeichne die Karten in die Hand des Spielers und zeichne Rechtecke um sie herum
 
             for index, rect in enumerate(rects):
 
@@ -279,8 +279,8 @@ class Draw():
                 self.screen.blit(transformed, rect)
                 pygame.draw.rect(self.screen, "GREEN", rect, 2)
 
-            # draw cards in the middle of the board
-            # for an aspect ratio of 309 to 436 the factor 0.708715596 is needed
+            # Karten in der Mitte des Brettes zeichnen
+            # Für ein Seitenverhältnis von 309 bis 436 ist der Faktor 0,708715596 erforderlich
 
             middlesize_rect = pygame.Rect(
                 (int((width/2)-int(0.708715596 * int(height/5))/2),
@@ -293,10 +293,10 @@ class Draw():
                     self.cards_and_pic[str(self.table.playedcards[-1])], (middlesize_rect.w, middlesize_rect.h)), middlesize_rect
             )
 
-            # fps counter
+            # FPS-Zähler
             self.screen.blit(update_fps(self.clock, self.clockfont), (10, 0))
 
-            # Render the Players number in the top right corner
+            # Rendern Sie die Spielernummer in der oberen rechten Ecke
 
             playernum_txt = self.clockfont.render(
                 f"Player {str(commonmemdict['curr_player_index'])}", True, self.inverted_bgavgcolor)
@@ -304,17 +304,17 @@ class Draw():
             self.screen.blit(
                 playernum_txt, (width - playernum_txt.get_width(), 0))
 
-            # display Uno Button if necessary
+            # Anzeige der UNO-Taste, falls erforderlich
             if commonmemdict['display_uno']:
                 uno_btn.show(self.screen)
 
             self.pygame.display.update()
 
-            # display the wildcard screen for choosing a color
+            # Zeigen Sie den Platzhalterbildschirm für die Auswahl einer Farbe an
             if commonmemdict["display_wildcard_screen"]:
                 self.display_Wildcardchoose(commonmemdict, eventobj)
 
-        # Ending Screen
+        # Bildschirm
         self.screen.fill((60, 25, 60))
         end_font = pygame.font.SysFont("Arial", 18)
         end_text = end_font.render("Ende", 1, pygame.Color("coral"))
@@ -326,3 +326,4 @@ class Draw():
 if __name__ == "__main__":
     d = Draw(playercount=1, npccount=1)
     d.drawgame()
+
