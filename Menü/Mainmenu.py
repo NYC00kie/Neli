@@ -60,16 +60,17 @@ def Mainmenu(callback, screen):  # Mainmenu
 
     #Create  Buettons
     #@param x , y , image , scale
-    start_button = Buetton(450, 50, start_img, 1)
-    bg_1_button = Buetton(50, 225, bg_1_button_img, 1)
-    bg_2_button = Buetton(125, 225, bg_2_button_img, 1)
-    bg_3_button = Buetton(200, 225, bg_3_button_img, 1)
-    bg_4_button = Buetton(275, 225, bg_4_button_img, 1)
-    bg_5_button = Buetton(350, 225, bg_5_button_img, 1)
-    anleitung_button = Buetton(50, 300, anleitung_img, 1)
-    partner_button = Buetton(500, 300, ja_img, 1)
-    Mod1_button = Buetton(100, 100, mod_1_img, 1)
-    Mod2_button = Buetton(250, 100, mod_2_img, 0.9)
+    start_button = Buetton(900, 100, start_img, 1)
+    bg_1_button = Buetton(100, 450, bg_1_button_img, 0.5)
+    bg_2_button = Buetton(250, 450, bg_2_button_img, 0.5)
+    bg_3_button = Buetton(400, 450, bg_3_button_img, 0.5)
+    bg_4_button = Buetton(550, 450, bg_4_button_img, 0.5)
+    bg_5_button = Buetton(700, 450, bg_5_button_img, 0.5)
+    anleitung_button = Buetton(100, 600, anleitung_img, 0.2)
+
+    partner_button = Buetton(1000, 600, ja_img, 0.2)
+    Mod1_button = Buetton(200, 200, mod_1_img, 0.5)
+    Mod2_button = Buetton(500, 200, mod_2_img, 0.5)
 
     #Text
     font = pygame.font.Font(None, 32)
@@ -149,7 +150,7 @@ def Mainmenu(callback, screen):  # Mainmenu
 
         pygame.display.update()
 
-    return callback
+    return callback, partner, background, Mode
 
 
 def Anleitung(background, screen):  # anleitung
@@ -157,7 +158,7 @@ def Anleitung(background, screen):  # anleitung
     running = True
     anleitung_text_img = pygame.image.load(
         'Images\Anleitung_text.png').convert_alpha()
-    anleitung_text_button = Buetton(25, 25, anleitung_text_img, 1)
+    anleitung_text_button = Buetton(50, 50, anleitung_text_img, 0.5)
     while running:
 
         screen.blit(background, (0, 0))
