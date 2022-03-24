@@ -165,10 +165,7 @@ class Table():
             if same_partial_card or black:
                 total_playable_cards += 1
 
-        if total_playable_cards == 0:
-            return True
-        else:
-            return False
+        return total_playable_cards == 0
 
     def checkvalidityplacedcard(self, playedcard) -> bool:
         """
@@ -180,8 +177,8 @@ class Table():
         # check if colors or values match or if the played card ist black and the latest played card is not from a WILDCARD
         if playedcard.value == latestcard.value or playedcard.color == latestcard.color or (playedcard.color == "BLACK" and latestcard.value != "EMPTY"):
             return True
-        else:
-            return False
+
+        return False
 
     def blackcardfunctionality(self, commonmemdict, event, chosen_color) -> None:
         """
@@ -211,18 +208,17 @@ class Table():
             # skip to the next player
             # this works because back in the mainloop the index of the current player again gets incremented by one
             self.indexcurrplayer = (self.indexcurrplayer+1) % len(self.players)
-            return
+
         elif playedcard.value == "DRAW2":
             # makes the next Player draw 2 Cards by calling the draw function on them
             nextplayerindex = (self.indexcurrplayer+1) % len(self.players)
             self.players[nextplayerindex].drawcard(amount=2)
-            return
+
         elif playedcard.value == "WILDCARD":
             # call the blackcardfunctionality function
             self.blackcardfunctionality(
                 commonmemdict=commonmemdict, event=event, chosen_color=chosencolor)
 
-            return
         elif playedcard.value == "WILDCARD4":
             # copy pure wildcard implementation
             self.blackcardfunctionality(
@@ -231,7 +227,6 @@ class Table():
             # makes the next Player draw 4 Cards by calling the draw funtion on them
             nextplayerindex = (self.indexcurrplayer+1) % len(self.players)
             self.players[nextplayerindex].drawcard(amount=4)
-            return
 
     def pcmove(self, event, commonmemdict) -> None:
         """
@@ -267,7 +262,10 @@ class Table():
         self.cardfunctionality(playedcard, commonmemdict, event, "")
 
     def calc_chosen_color(self):
-        playerscards = self.players[self.indexcurrplayer].holding
+        """
+        #calculates the color the pick for the n
+        """
+
         colors = ["RED", "GREEN", "BLUE", "YELLOW"]
         picked_color = colors[random.randint(0, 3)]
         return picked_color

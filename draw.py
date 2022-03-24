@@ -87,6 +87,7 @@ class Draw():
     def drawmenu(self):
         """
         #draws the menu
+        #not yet implemented because the code was not given to me
         """
         self.screen = self.pygame.display.set_mode(self.menudimension)
 
@@ -101,8 +102,16 @@ class Draw():
             self.screen.fill((60, 25, 60))
             self.pygame.display.update()
 
-    def display_Wildcardchoose(self, commonmemdict, eventobj):
-        """displays a chosing screen for the wildcard card"""
+    def display_Wildcardchoose(self, commonmemdict, eventobj) -> None:
+        """
+        #Returns None
+        #displays a chosing screen for the wildcard card
+        #A 2 by 2 Pattern of colors will be displayed with the colors equal to the Cards colors
+        """
+
+        # the Cards color gets determined by taking the average color
+        # of the Card with value of 1 and the corresponding colors
+        # what gets drawn by pygame are
 
         width, height = self.screen.get_width(), self.screen.get_height()
 
@@ -128,13 +137,14 @@ class Draw():
             "color": pygame.transform.average_color(self.cards_and_pic["BLUE 1"]),
             "rect": pygame.Rect(width/2, height/2, width/2, height/2)
             }
-        print(Blue, Red, Green, Yellow)
+
         pygame.draw.rect(self.screen, Yellow["color"], Yellow["rect"])
         pygame.draw.rect(self.screen, Green["color"], Green["rect"])
         pygame.draw.rect(self.screen, Red["color"], Red["rect"])
         pygame.draw.rect(self.screen, Blue["color"], Blue["rect"])
 
         self.pygame.display.update()
+        # a color need to be chosen to leave this loop and to end the game
         loop = True
         while loop:
             events = pygame.event.get()
