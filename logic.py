@@ -205,8 +205,7 @@ class Table():
         """
         # Check for "SKIP", "REVERSE", "DRAW2", "WILDCARD", "WILDCARD4"
         if playedcard.value == "SKIP":
-            return
-        elif playedcard.value == "REVERSE":
+            self.indexcurrplayer = (self.indexcurrplayer+1) % len(self.players)
             return
         elif playedcard.value == "DRAW2":
             return
