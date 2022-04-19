@@ -171,7 +171,7 @@ class Table():
 
         return False
 
-    def blackcardfunctionality(self, commonmemdict, event, chosen_color) -> None:
+    def blackcardfunctionality(self, event, chosen_color) -> None:
         """
         #returns None
         #Replaces the Wildcard with a Blank Card of the Chosen Color
@@ -179,18 +179,18 @@ class Table():
         # a color can be supplied to the function
         # this is only done by npcs
         if chosen_color == "":
-            commonmemdict["display_wildcard_screen"] = True
+            self.commonmemdict["display_wildcard_screen"] = True
             # waiting for userinput
             while not event.is_set():
                 event.wait(1)
 
             event.clear()
 
-            chosen_color = commonmemdict["chosen_color"]
+            chosen_color = self.commonmemdict["chosen_color"]
 
         self.playedcards[-1] = Card("EMPTY", chosen_color)
 
-    def cardfunctionality(self, playedcard, commonmemdict, event, chosencolor) -> None:
+    def cardfunctionality(self, playedcard, event, chosencolor) -> None:
         """
         #Method checks if the Card Played was a Special Card and what effect it has
         """
@@ -207,19 +207,17 @@ class Table():
 
         elif playedcard.value == "WILDCARD":
             # call the blackcardfunctionality function
-            self.blackcardfunctionality(
-                commonmemdict=commonmemdict, event=event, chosen_color=chosencolor)
+            self.blackcardfunctionality(event=event, chosen_color=chosencolor)
 
         elif playedcard.value == "WILDCARD4":
             # copy pure wildcard implementation
-            self.blackcardfunctionality(
-                commonmemdict, event, chosen_color=chosencolor)
+            self.blackcardfunctionality(event, chosen_color=chosencolor)
 
             # makes the next Player draw 4 Cards by calling the draw funtion on them
             nextplayerindex = (self.indexcurrplayer+1) % len(self.players)
             self.players[nextplayerindex].drawcard(amount=4)
 
-    def pcmove(self, event, commonmemdict) -> None:
+    def pcmove(self, event) -> None:
         """
         #Test if the Player can't do anything besides drawing
         #If the player can only draw, then they autodraw
@@ -240,7 +238,7 @@ class Table():
             event.wait(1)
 
         event.clear()
-        playedcard = self.players[self.indexcurrplayer].holding[commonmemdict["index_playedcard"]]
+        playedcard = self.players[self.indexcurrplayer].holding[self.commonmemdict["index_playedcard"]]
 
         # check if the selected card is playable:
         # if its not then return the function without doing anything.
@@ -250,7 +248,7 @@ class Table():
             return
 
         self.players[self.indexcurrplayer].playcard(playedcard)
-        self.cardfunctionality(playedcard, commonmemdict, event, "")
+        self.cardfunctionality(playedcard, event, "")
 
     def calc_chosen_color(self):
         """
@@ -261,7 +259,7 @@ class Table():
         picked_color = colors[random.randint(0, 3)]
         return picked_color
 
-    def npcmove(self, commonmemdict) -> None:
+    def npcmove(self) -> None:
         """
         #tests if the npc needs to draw a card.
         #then it checks all valid cards it can play and chooses one at random and plays it
@@ -283,16 +281,15 @@ class Table():
         chosencard = random.choice(validcards)
 
         self.players[self.indexcurrplayer].playcard(chosencard)
-        self.cardfunctionality(chosencard, commonmemdict,
-                               None, chosencolor=chosencolor)
+        self.cardfunctionality(chosencard, None, chosencolor=chosencolor)
 
-    def checkwin(self, commonmemdict) -> bool:
+    def checkwin(self) -> bool:
         """
         #checks wether the current player has won the game
         #returns True if the current Player has no cards and said uno
         #returns False if the current Player has more then 0 cards
         """
-        commonmemdict["display_uno"] = False
+        self.commonmemdict["display_uno"] = False
         if len(self.players[self.indexcurrplayer].holding) > 0:
 
             return False
@@ -300,7 +297,7 @@ class Table():
             # didn't say Uno
             if not self.players[self.indexcurrplayer].saiduno:
                 self.players[self.indexcurrplayer].drawcard(2)
-                commonmemdict["display_uno"] = False
+                self.commonmemdict["display_uno"] = False
                 return False
             # said Uno
             else:
@@ -313,14 +310,14 @@ class Table():
         """
         self.indexcurrplayer = 0
         self.commonmemdict = commonmemdict
-        commonmemdict["curr_player_index"] = self.indexcurrplayer
+        self.commonmemdict["curr_player_index"] = self.indexcurrplayer
         self.players[self.indexcurrplayer].holding = sorted(
             self.players[self.indexcurrplayer].holding, key=lambda card: card.color)
         # Gameloop and Drawloop will be seperate.
         # They will only share a common dictionary, which is how they will communicate and share data
 
-        while commonmemdict["rungame"] and not event.is_set():
-            commonmemdict["curr_player_index"] = self.indexcurrplayer
+        while self.commonmemdict["rungame"] and not event.is_set():
+            self.commonmemdict["curr_player_index"] = self.indexcurrplayer
 
             player = self.players[self.indexcurrplayer]
 
@@ -328,16 +325,16 @@ class Table():
                 player.holding, key=lambda card: card.color, reverse=True)
 
             if len(player.holding) < 2:
-                commonmemdict["display_uno"] = True
+                self.commonmemdict["display_uno"] = True
 
             if player.isplayer:
-                self.pcmove(event=event, commonmemdict=commonmemdict)
+                self.pcmove(event=event)
                 time.sleep(0.5)
             else:
-                self.npcmove(commonmemdict=commonmemdict)
+                self.npcmove()
 
-            if self.checkwin(commonmemdict):
-                commonmemdict["rungame"] = False
+            if self.checkwin():
+                self.commonmemdict["rungame"] = False
                 break
 
             self.indexcurrplayer += 1

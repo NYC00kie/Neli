@@ -1,4 +1,5 @@
 import pygame
+import sys
 import button
 
 # Julia
@@ -140,6 +141,7 @@ def Mainmenu(callback, screen):  # Mainmenu
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 gameActive = False
+                sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_BACKSPACE:
                     name = name[:-1]
@@ -157,7 +159,7 @@ def Anleitung(background, screen):  # anleitung
 
     running = True
     anleitung_text_img = pygame.image.load(
-        'Images\Anleitung_text.png').convert_alpha()
+        './Menü/Images/Anleitung_text.png').convert_alpha()
     anleitung_text_button = Buetton(50, 50, anleitung_text_img, 0.5)
     while running:
 
