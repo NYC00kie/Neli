@@ -218,7 +218,7 @@ class Draw():
 
         gamethread.start()
 
-        self.table.startgame()
+        self.table.startgame(commonmemdict)
 
         commonmemdict["display_wildcard_screen"] = False
 

@@ -131,10 +131,15 @@ class Table():
             hands.append(Hand(self, isplayer=False))
         return hands
 
-    def startgame(self) -> None:
+    def startgame(self, commonmemdict) -> None:
         """
         #initialize the players cards and the top card to start the game
         """
+
+        # fix for Problem in Github Issue #7
+
+        self.commonmemdict = commonmemdict
+
         for player in self.players:
             player.drawcard(amount=7)
 
