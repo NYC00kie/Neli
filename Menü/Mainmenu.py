@@ -62,16 +62,11 @@ def Mainmenu(callback, screen):  # Mainmenu
     #Create  Buettons
     #@param x , y , image , scale
     start_button = Buetton(900, 100, start_img, 1)
-    bg_1_button = Buetton(100, 450, bg_1_button_img, 0.5)
-    bg_2_button = Buetton(250, 450, bg_2_button_img, 0.5)
-    bg_3_button = Buetton(400, 450, bg_3_button_img, 0.5)
-    bg_4_button = Buetton(550, 450, bg_4_button_img, 0.5)
-    bg_5_button = Buetton(700, 450, bg_5_button_img, 0.5)
-    anleitung_button = Buetton(100, 600, anleitung_img, 0.2)
-
-    partner_button = Buetton(1000, 600, ja_img, 0.2)
-    Mod1_button = Buetton(200, 200, mod_1_img, 0.5)
-    Mod2_button = Buetton(500, 200, mod_2_img, 0.5)
+    bg_1_button = Buetton(100, 450, bg_1_button_img, 0.3)
+    bg_2_button = Buetton(250, 450, bg_2_button_img, 0.3)
+    bg_3_button = Buetton(400, 450, bg_3_button_img, 0.3)
+    bg_4_button = Buetton(550, 450, bg_4_button_img, 0.3)
+    bg_5_button = Buetton(700, 450, bg_5_button_img, 0.3)
 
     #Text
     font = pygame.font.Font(None, 32)
@@ -85,11 +80,10 @@ def Mainmenu(callback, screen):  # Mainmenu
     #Mainloop
     #var
     background = bg_1_img
-    partner = False
+
     #modus für Kartenstil True = 1 und False = 2
-    Mode = True
-    #Playername
-    name = 'Player Name'
+    Mode = False
+
     gameActive = True
 
     while gameActive:
@@ -97,11 +91,6 @@ def Mainmenu(callback, screen):  # Mainmenu
         #background
         screen.fill((255, 255, 255))
         screen.blit(background, (0, 0))
-
-        #playername
-        name_surface = font.render(name, True, (0, 0, 0))
-        pygame.draw.rect(screen, (255, 255, 255), input_rect, 2)
-        screen.blit(name_surface, (input_rect.x + 5, input_rect.y + 3))
 
         #buttons
         if start_button.draw(screen):
@@ -119,40 +108,16 @@ def Mainmenu(callback, screen):  # Mainmenu
         if bg_5_button.draw(screen):
             background = bg_5_img
 
-        if anleitung_button.draw(screen):
-            Anleitung(background, screen)
-
-        if partner_button.draw(screen):
-            if partner:
-                partner_button.image = ja_img
-                partner = False
-            else:
-                partner_button.image = nein_img
-                partner = True
-
-        if Mod1_button.draw(screen):
-            Mode = True
-        if Mod2_button.draw(screen):
-            Mode = False
-
         #Partner spielen
-        screen.blit(text, text_rect)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 gameActive = False
                 sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_BACKSPACE:
-                    name = name[:-1]
-                elif len(name) > 10:
-                    break
-                else:
-                    name += event.unicode
 
         pygame.display.update()
 
-    return callback, partner, background, Mode
+    return callback, background
 
 
 def Anleitung(background, screen):  # anleitung
