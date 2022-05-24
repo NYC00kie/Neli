@@ -200,7 +200,7 @@ class Draw():
             self.backgroundimg, (width, height))
 
         # the curr_player_index gets overwritten directly in the gamethread but this might be needed for some systems
-        commonmemdict = {"rungame": True, "curr_player_index": 0}
+        commonmemdict = {"rungame": True, "curr_player_index": 0, "display_wildcard_screen": False, "display_uno": False}
         hand = copy.deepcopy(
             self.table.players[commonmemdict["curr_player_index"]].holding)
 
