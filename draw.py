@@ -8,10 +8,12 @@ from threading import Thread
 import threading
 import copy
 import pygame
+import pygame_widgets
+from pygame_widgets.slider import Slider
 from logic import Table
 from logic import Card
 from button import Button
-from Menü.Mainmenu import Mainmenu
+from button import Buetton
 
 
 def update_fps(clock, font):
@@ -41,6 +43,7 @@ class Draw():
 
     def __init__(self, playercount: int, npccount: int):
         pygame.init()
+        self.musicobject = None
         self.pygame = pygame
         self.menudimension = (700, 600)
         self.table = Table(playercount=playercount, npccount=npccount)
@@ -57,6 +60,10 @@ class Draw():
         self.inverted_bgavgcolor = [
             255-self.bg_average_color[i] for i in range(0, 3)
             ]
+        width = self.menudimension[0]
+        height = self.menudimension[1]
+        self.slider = Slider(self.screen, int(width/2-(0.5*width*1/4)), int(height/2+50*(2+1)),
+                             width*1/4, 20, min=0, max=0.6, step=0.01, initial=0.1)
         print(self.bg_average_color, self.inverted_bgavgcolor)
 
     def generatecardimages(self):
@@ -87,31 +94,84 @@ class Draw():
                     0, - int(self.screen.get_height() / 6))
         return rects
 
+    def setFalse(self, x):
+        global loop
+        loop = False
+
+    def drawsettings(self):
+
+        global loop, slider
+        loop = True
+        width = self.menudimension[0]
+        height = self.menudimension[1]
+        btns = [
+            Buetton(text="Return", pos=(width/2, height/2), font=35,
+                    assignedfunc=lambda: self.setFalse(loop))
+
+        ]
+
+        while loop:
+            self.clock.tick(90)
+            events = pygame.event.get()
+            pressed_keys = pygame.key.get_pressed()
+            for event in events:
+                if event.type == pygame.QUIT or pressed_keys[pygame.K_ESCAPE]:
+                    sys.exit()
+                for btn in btns:
+                    btn.click(event, pygame)
+            self.screen.blit(pygame.transform.scale(
+                self.backgroundimg, self.menudimension), (0, 0))
+
+            for btn in btns:
+                btn.hover(self.screen)
+            for btn in btns:
+                btn.show(self.screen)
+
+            self.musicobject.set_volume(self.slider.getValue())
+
+            pygame_widgets.update(events)
+            pygame.display.update()
+
     def drawmenu(self):
         """
         #draws the menu
-        #not yet implemented because the code was not given to me
         """
         self.screen = self.pygame.display.set_mode(self.menudimension)
 
-        musicobject = pygame.mixer.Sound("./Music/Sound_Startseite.mp3")
-        musicobject.set_volume(0.1)
-        musicobject.play(-1)
-
-        callback, background = Mainmenu(
-            self.drawgame, self.screen)
-
+        self.musicobject = pygame.mixer.Sound("./Music/Sound_Startseite.mp3")
+        self.musicobject.set_volume(0.1)
+        self.musicobject.play(-1)
         playercount = 1
-
         self.deckindex = 0
-
-        self.backgroundimg = background.convert()
-
         self.Table = Table(playercount=playercount, npccount=1)
         self.cards_and_pic = self.generatecardimages()
+        btns = [
+            Buetton(text="Single Player", pos=(self.menudimension[0]/2, (self.menudimension[1]/4)+0),
+                    font=35, assignedfunc=self.drawgame, feedback="Single Player"),
+            Buetton(text="Multiplayer", pos=(self.menudimension[0]/2, (self.menudimension[1]/4)+50),
+                    font=35, assignedfunc=self.drawsettings, feedback="Multiplayer"),
+            Buetton(text="Settings", pos=(self.menudimension[0]/2, (self.menudimension[1]/4)+100),
+                    font=35, assignedfunc=self.drawsettings, feedback="Settings")
+        ]
 
-        musicobject.stop()
-        callback()
+        while True:
+            events = pygame.event.get()
+            self.clock.tick(90)
+            pressed_keys = pygame.key.get_pressed()
+            for event in events:
+                if event.type == pygame.QUIT or pressed_keys[pygame.K_ESCAPE]:
+                    sys.exit()
+                for btn in btns:
+                    btn.click(event, pygame)
+            self.screen.blit(pygame.transform.scale(
+                self.backgroundimg, self.menudimension), (0, 0))
+
+            for btn in btns:
+                btn.hover(self.screen)
+            for btn in btns:
+                btn.show(self.screen)
+
+            pygame.display.update()
 
     def display_Wildcardchoose(self, commonmemdict, eventobj) -> None:
         """
@@ -184,9 +244,10 @@ class Draw():
         # Move the hovered over Card a bit up
 
         # set music
-        musicobject = pygame.mixer.Sound("./Music/Spielsound_Neli.mp3")
-        musicobject.set_volume(0.1)
-        musicobject.play(-1)
+        self.musicobject.stop()
+        self.musicobject = pygame.mixer.Sound("./Music/Spielsound_Neli.mp3")
+        self.musicobject.set_volume(0.1)
+        self.musicobject.play(-1)
 
         # set screen
         self.screen = self.pygame.display.set_mode(
@@ -200,7 +261,8 @@ class Draw():
             self.backgroundimg, (width, height))
 
         # the curr_player_index gets overwritten directly in the gamethread but this might be needed for some systems
-        commonmemdict = {"rungame": True, "curr_player_index": 0, "display_wildcard_screen": False, "display_uno": False}
+        commonmemdict = {"rungame": True, "curr_player_index": 0,
+                         "display_wildcard_screen": False, "display_uno": False}
         hand = copy.deepcopy(
             self.table.players[commonmemdict["curr_player_index"]].holding)
 
